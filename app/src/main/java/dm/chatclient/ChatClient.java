@@ -1,5 +1,7 @@
 package dm.chatclient;
 
+import android.util.Log;
+
 import java.io.Closeable;
 import java.io.IOException;
 
@@ -42,10 +44,17 @@ public class ChatClient implements Closeable
         sendMessageNative(m_pClient, message);
     }
 
+    public void notifyNewMessage(String message)
+    {
+
+    }
+
     @Override
     public void close() throws IOException
     {
+        Log.i("ChatClient", "called close()");
         destroyClientNative(m_pClient);
+        m_pClient = 0;
     }
 
     private native long createClientNative();

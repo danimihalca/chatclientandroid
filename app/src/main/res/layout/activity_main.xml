@@ -44,4 +44,12 @@
             android:text="Disconnect"
             android:id="@+id/disconnectButton" android:layout_below="@+id/connectButton" android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/messagesView" android:layout_below="@+id/disconnectButton"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            android:layout_above="@+id/sendButton" android:layout_alignRight="@+id/connectButton"
+            android:layout_alignEnd="@+id/connectButton"/>
 </RelativeLayout>

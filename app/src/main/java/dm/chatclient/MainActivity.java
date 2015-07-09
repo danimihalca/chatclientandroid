@@ -8,14 +8,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.io.IOException;
 
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends ActionBarActivity implements IChatMessageListener
 {
     private ChatClient client;
     Button connectButton;
     Button disconnectButton;
     EditText messageField;
+    TextView messagesView;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -25,21 +29,13 @@ public class MainActivity extends ActionBarActivity
         connectButton = (Button) findViewById(R.id.connectButton);
         disconnectButton = (Button) findViewById(R.id.disconnectButton);
         messageField = (EditText) findViewById(R.id.messageField);
+        messagesView = (TextView) findViewById(R.id.messagesView);
         disconnectButton.setEnabled(false);
         connectButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
                 client.connect();
-//                Thread t = new Thread(new Runnable()
-//                {
-//                    public void run()
-//                    {
-//                        Log.i("MainActivity", "Destroying Service Thread");
-//                    }
-//                });
-
-//                t.start();
                 connectButton.setEnabled(false);
                 disconnectButton.setEnabled(true);
             }
@@ -72,6 +68,48 @@ public class MainActivity extends ActionBarActivity
         client.startService();
     }
 
+    @Override
+    protected void onStop()
+    {
+        Log.i("MainActivity", "onStop");
+//        try
+//        {
+//            client.close();
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        client = null;
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        Log.i("MainActivity", "onDestroy");
+        try
+        {
+            client.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        client = null;
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStart()
+    {
+        Log.i("MainActivity", "onStart");
+//        client = new ChatClient();
+//        client.initialize();
+//        client.startService();
+        super.onStart();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -96,5 +134,11 @@ public class MainActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onNewMessage(String message)
+    {
+
     }
 }
