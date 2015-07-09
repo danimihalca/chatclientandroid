@@ -28,6 +28,11 @@ public class ChatClient implements Closeable
         connectNative(m_pClient);
     }
 
+    public void disconnect()
+    {
+        disconnectNative(m_pClient);
+    }
+
     public void startService()
     {
         startServiceNative(m_pClient);
@@ -48,6 +53,8 @@ public class ChatClient implements Closeable
     private native void initializeNative(long client);
 
     private native void connectNative(long client);
+
+    private native void disconnectNative(long client);
 
     private native void startServiceNative(long client);
 

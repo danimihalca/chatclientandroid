@@ -2,33 +2,74 @@ package dm.chatclient;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 
 public class MainActivity extends ActionBarActivity
 {
     private ChatClient client;
-
+    Button connectButton;
+    Button disconnectButton;
+    EditText messageField;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        client = new ChatClient();
-        client.initialize();
-        client.connect();
-        Thread t = new Thread(new Runnable()
+        connectButton = (Button) findViewById(R.id.connectButton);
+        disconnectButton = (Button) findViewById(R.id.disconnectButton);
+        messageField = (EditText) findViewById(R.id.messageField);
+        disconnectButton.setEnabled(false);
+        connectButton.setOnClickListener(new View.OnClickListener()
         {
-            public void run()
+            public void onClick(View v)
             {
-                client.startService();
+                client.connect();
+//                Thread t = new Thread(new Runnable()
+//                {
+//                    public void run()
+//                    {
+//                        Log.i("MainActivity", "Destroying Service Thread");
+//                    }
+//                });
+
+//                t.start();
+                connectButton.setEnabled(false);
+                disconnectButton.setEnabled(true);
             }
         });
 
-        t.start();
-        client.sendMessage("HELLO from ANDROID");
+        disconnectButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                client.disconnect();
+                connectButton.setEnabled(true);
+                disconnectButton.setEnabled(false);
+            }
+        });
+
+
+        Button sendButton = (Button) findViewById(R.id.sendButton);
+        sendButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                String message = messageField.getText().toString();
+                client.sendMessage(message);
+                messageField.setText("");
+            }
+        });
+
+        client = new ChatClient();
+        client.initialize();
+        client.startService();
     }
 
 
