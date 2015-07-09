@@ -11,30 +11,43 @@
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/userNameField" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:hint="User name"/>
+            android:id="@+id/userNameField"
+            android:singleLine="true"
+            android:hint="User name"
+            android:layout_below="@+id/addressField" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_toLeftOf="@+id/disconnectButton"
+            android:layout_toStartOf="@+id/disconnectButton"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Connect"
-            android:id="@+id/connectButton" android:layout_below="@+id/userNameField" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" android:clickable="false" android:onClick="onConnectClick"/>
+            android:id="@+id/connectButton"
+            android:clickable="false" android:onClick="onConnectClick"
+            android:layout_alignParentTop="true" android:layout_alignRight="@+id/disconnectButton"
+            android:layout_alignEnd="@+id/disconnectButton" android:layout_alignLeft="@+id/disconnectButton"
+            android:layout_alignStart="@+id/disconnectButton"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/addressField" android:layout_alignBottom="@+id/connectButton" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:hint="Address" android:layout_toLeftOf="@+id/connectButton"
-            android:layout_toStartOf="@+id/connectButton"/>
+            android:singleLine="true"
+            android:id="@+id/addressField"
+            android:hint="Address"
+            android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/userNameField" android:layout_alignEnd="@+id/userNameField"
+            android:text="ws://192.168.0.3:9002"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Send"
+            android:singleLine="true"
             android:id="@+id/sendButton" android:layout_alignParentBottom="true"
             android:layout_alignRight="@+id/connectButton" android:layout_alignEnd="@+id/connectButton"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             android:id="@+id/messageField" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" android:layout_toLeftOf="@+id/connectButton"
             android:layout_toStartOf="@+id/connectButton" android:hint="Message"/>
@@ -44,12 +57,22 @@
             android:text="Disconnect"
             android:id="@+id/disconnectButton" android:layout_below="@+id/connectButton" android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>
-    <TextView
-            android:layout_width="wrap_content"
+    <ScrollView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/messagesView" android:layout_below="@+id/disconnectButton"
-            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-            android:layout_above="@+id/sendButton" android:layout_alignRight="@+id/connectButton"
-            android:layout_alignEnd="@+id/connectButton"/>
+            android:id="@+id/scrollView" android:layout_above="@+id/sendButton"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
+            android:layout_below="@+id/disconnectButton" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="false">
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+
+                android:scrollbars = "vertical"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/messagesView"
+                android:layout_alignTop="@+id/scrollView" android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+    </ScrollView>
 </RelativeLayout>

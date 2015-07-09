@@ -34,9 +34,10 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
         disconnectButton.setEnabled(false);
         connectButton.setOnClickListener(new View.OnClickListener()
         {
+            EditText addressField = (EditText) findViewById(R.id.addressField);
             public void onClick(View v)
             {
-                client.connect();
+                client.connect(addressField.getText().toString());
                 connectButton.setEnabled(false);
                 disconnectButton.setEnabled(true);
             }

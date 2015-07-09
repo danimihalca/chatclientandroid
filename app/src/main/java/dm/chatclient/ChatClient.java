@@ -28,9 +28,9 @@ public class ChatClient implements Closeable
         initializeNative(m_pClient);
     }
 
-    public void connect()
+    public void connect(String uri)
     {
-        connectNative(m_pClient);
+        connectNative(m_pClient, uri);
     }
 
     public void disconnect()
@@ -64,7 +64,7 @@ public class ChatClient implements Closeable
 
     private native void initializeNative(long client);
 
-    private native void connectNative(long client);
+    private native void connectNative(long client, String uri);
 
     private native void disconnectNative(long client);
 

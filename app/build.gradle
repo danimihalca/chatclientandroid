@@ -17,7 +17,7 @@ android {
     buildToolsVersion "22.0.1"
 
     sourceSets.main {
-        jniLibs.srcDir '/home/ice/thesis/dist/lib/Debug/android/21' //TODO: determine current API/SDK version
+        jniLibs.srcDir '/home/ice/thesis/dist/lib/Release/android/21' //TODO: determine current API/SDK version
         jni.srcDirs = [] //disable automatic ndk-build call
     }
 
