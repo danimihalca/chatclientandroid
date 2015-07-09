@@ -8,7 +8,7 @@ import java.io.IOException;
 public class ChatClient implements Closeable
 {
     private long m_pClient;
-
+    private IChatMessageListener m_listener;
     static
     {
         System.loadLibrary("chatClientAPI");
@@ -19,7 +19,10 @@ public class ChatClient implements Closeable
     {
         m_pClient = createClientNative();
     }
-
+    public void addListener(IChatMessageListener listener)
+    {
+        m_listener = listener;
+    }
     public void initialize()
     {
         initializeNative(m_pClient);
@@ -46,7 +49,7 @@ public class ChatClient implements Closeable
 
     public void notifyNewMessage(String message)
     {
-
+        m_listener.onNewMessage(message);
     }
 
     @Override

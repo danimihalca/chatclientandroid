@@ -20,6 +20,7 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
     Button disconnectButton;
     EditText messageField;
     TextView messagesView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -64,6 +65,7 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
         });
 
         client = new ChatClient();
+        client.addListener(this);
         client.initialize();
         client.startService();
     }
@@ -72,15 +74,15 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
     protected void onStop()
     {
         Log.i("MainActivity", "onStop");
-//        try
-//        {
-//            client.close();
-//        }
-//        catch (IOException e)
-//        {
-//            e.printStackTrace();
-//        }
-//        client = null;
+        //        try
+        //        {
+        //            client.close();
+        //        }
+        //        catch (IOException e)
+        //        {
+        //            e.printStackTrace();
+        //        }
+        //        client = null;
         super.onStop();
     }
 
@@ -104,9 +106,9 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
     protected void onStart()
     {
         Log.i("MainActivity", "onStart");
-//        client = new ChatClient();
-//        client.initialize();
-//        client.startService();
+        //        client = new ChatClient();
+        //        client.initialize();
+        //        client.startService();
         super.onStart();
     }
 
@@ -137,8 +139,15 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
     }
 
     @Override
-    public void onNewMessage(String message)
+    public void onNewMessage(final String message)
     {
+        MainActivity.this.runOnUiThread(new Runnable()
+        {
 
+            public void run()
+            {
+                messagesView.append("\n" + message);
+            }
+        });
     }
 }
