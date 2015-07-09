@@ -16,12 +16,21 @@ android {
     compileSdkVersion 21
     buildToolsVersion "22.0.1"
 
+    sourceSets.main {
+        jniLibs.srcDir '/home/ice/thesis/dist/lib/Release/android/21' //TODO: determine current API/SDK version
+        jni.srcDirs = [] //disable automatic ndk-build call
+    }
+
     defaultConfig {
         applicationId "dm.chatclient"
-        minSdkVersion 10
+        minSdkVersion 9
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        ndk {
+            moduleName "chatClientJNI"
+            ldLibs "log"
+        }
     }
 
     compileOptions {

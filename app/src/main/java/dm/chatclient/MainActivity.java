@@ -8,12 +8,27 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity
 {
+    private ChatClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        client = new ChatClient();
+        client.initialize();
+        client.connect();
+        Thread t = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                client.startService();
+            }
+        });
+
+        t.start();
+        client.sendMessage("HELLO from ANDROID");
     }
 
 

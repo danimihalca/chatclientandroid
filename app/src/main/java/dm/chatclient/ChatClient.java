@@ -9,6 +9,7 @@ public class ChatClient implements Closeable
 
     static
     {
+        System.loadLibrary("chatClientAPI");
         System.loadLibrary("chatClientJNI");
     }
 
