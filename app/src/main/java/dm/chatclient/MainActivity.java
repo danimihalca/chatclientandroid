@@ -3,11 +3,14 @@ package dm.chatclient;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -18,6 +21,8 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
     private ChatClient client;
     Button connectButton;
     Button disconnectButton;
+    EditText addressField;
+    EditText usernameField;
     EditText messageField;
     TextView messagesView;
 
@@ -29,17 +34,21 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
 
         connectButton = (Button) findViewById(R.id.connectButton);
         disconnectButton = (Button) findViewById(R.id.disconnectButton);
+        addressField = (EditText) findViewById(R.id.addressField);
+        usernameField = (EditText) findViewById(R.id.userNameField);
+
         messageField = (EditText) findViewById(R.id.messageField);
         messagesView = (TextView) findViewById(R.id.messagesView);
         disconnectButton.setEnabled(false);
         connectButton.setOnClickListener(new View.OnClickListener()
         {
-            EditText addressField = (EditText) findViewById(R.id.addressField);
             public void onClick(View v)
             {
                 client.connect(addressField.getText().toString());
                 connectButton.setEnabled(false);
                 disconnectButton.setEnabled(true);
+                addressField.setEnabled(false);
+                usernameField.setEnabled(false);
             }
         });
 
@@ -50,18 +59,29 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
                 client.disconnect();
                 connectButton.setEnabled(true);
                 disconnectButton.setEnabled(false);
+                addressField.setEnabled(true);
+                usernameField.setEnabled(true);
             }
         });
-
+        messageField.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE))
+                {
+                    performSend();
+                }
+                return false;
+            }
+        });
 
         Button sendButton = (Button) findViewById(R.id.sendButton);
         sendButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
-                String message = messageField.getText().toString();
-                client.sendMessage(message);
-                messageField.setText("");
+                performSend();
             }
         });
 
@@ -71,19 +91,18 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
         client.startService();
     }
 
+    private void performSend()
+    {
+        String message = messageField.getText().toString();
+        String username = usernameField.getText().toString();
+        client.sendMessage('<'+username+">:"+message);
+        messageField.setText("");
+    }
+
     @Override
     protected void onStop()
     {
         Log.i("MainActivity", "onStop");
-        //        try
-        //        {
-        //            client.close();
-        //        }
-        //        catch (IOException e)
-        //        {
-        //            e.printStackTrace();
-        //        }
-        //        client = null;
         super.onStop();
     }
 
@@ -107,9 +126,6 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
     protected void onStart()
     {
         Log.i("MainActivity", "onStart");
-        //        client = new ChatClient();
-        //        client.initialize();
-        //        client.startService();
         super.onStart();
     }
 
@@ -148,6 +164,15 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
             public void run()
             {
                 messagesView.append("\n" + message);
+                final ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+                scrollView.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                });
             }
         });
     }
