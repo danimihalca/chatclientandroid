@@ -11,6 +11,7 @@ public class ChatClient implements Closeable
     private IChatMessageListener m_listener;
     static
     {
+        System.loadLibrary("libwebsockets");
         System.loadLibrary("chatClientAPI");
         System.loadLibrary("chatClientJNI");
     }
