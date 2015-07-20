@@ -1,5 +1,6 @@
 package dm.chatclient;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,10 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.io.IOException;
 
@@ -44,7 +42,7 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
         {
             public void onClick(View v)
             {
-                client.connect(addressField.getText().toString());
+                client.connect(addressField.getText().toString(), 9003);
                 connectButton.setEnabled(false);
                 disconnectButton.setEnabled(true);
                 addressField.setEnabled(false);
@@ -87,8 +85,6 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
 
         client = new ChatClient();
         client.addListener(this);
-        client.initialize();
-        client.startService();
     }
 
     private void performSend()
@@ -163,7 +159,8 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
 
             public void run()
             {
-                messagesView.append("\n" + message);
+
+                messagesView.append(message+"\n");
                 final ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
                 scrollView.post(new Runnable()
                 {
@@ -173,6 +170,43 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
                         scrollView.fullScroll(ScrollView.FOCUS_DOWN);
                     }
                 });
+            }
+        });
+    }
+
+    @Override
+    public void onConnected()
+    {
+        MainActivity.this.runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                messagesView.append("CONNECTED\n");
+                Context context = getApplicationContext();
+                CharSequence text = "Connected!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        });
+    }
+
+    @Override
+    public void onDisconnected()
+    {
+        MainActivity.this.runOnUiThread(new Runnable()
+        {
+
+            public void run()
+            {
+                messagesView.append("DISCONNECTED\n");
+                Context context = getApplicationContext();
+                CharSequence text = "Disconnected!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             }
         });
     }

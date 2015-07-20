@@ -24,14 +24,10 @@ public class ChatClient implements Closeable
     {
         m_listener = listener;
     }
-    public void initialize()
-    {
-        initializeNative(m_pClient);
-    }
 
-    public void connect(String uri)
+    public void connect(String address, int port)
     {
-        connectNative(m_pClient, uri);
+        connectNative(m_pClient, address, port);
     }
 
     public void disconnect()
@@ -39,20 +35,25 @@ public class ChatClient implements Closeable
         disconnectNative(m_pClient);
     }
 
-    public void startService()
-    {
-        startServiceNative(m_pClient);
-    }
     public void sendMessage(String message)
     {
         sendMessageNative(m_pClient, message);
     }
 
-    public void notifyNewMessage(String message)
+    public void notifyOnMessage(String message)
     {
         m_listener.onNewMessage(message);
     }
 
+    public void notifyOnConnected()
+    {
+        m_listener.onConnected();
+    }
+
+    public void notifyOnDisconnected()
+    {
+        m_listener.onDisconnected();
+    }
     @Override
     public void close() throws IOException
     {
@@ -63,13 +64,9 @@ public class ChatClient implements Closeable
 
     private native long createClientNative();
 
-    private native void initializeNative(long client);
-
-    private native void connectNative(long client, String uri);
+    private native void connectNative(long client, String address, int port);
 
     private native void disconnectNative(long client);
-
-    private native void startServiceNative(long client);
 
     private native void sendMessageNative(long client, String message);
 
