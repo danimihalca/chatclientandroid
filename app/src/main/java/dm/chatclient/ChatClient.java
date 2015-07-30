@@ -11,7 +11,8 @@ public class ChatClient implements Closeable
     private IChatMessageListener m_listener;
     static
     {
-        System.loadLibrary("libwebsockets");
+        System.loadLibrary("jsoncpp");
+        System.loadLibrary("websockets");
         System.loadLibrary("chatClientAPI");
         System.loadLibrary("chatClientJNI");
     }
@@ -25,11 +26,15 @@ public class ChatClient implements Closeable
         m_listener = listener;
     }
 
-    public void connect(String address, int port)
+    public void setServerProperties(String address, int port)
     {
-        connectNative(m_pClient, address, port);
+        setServerPropertiesNative(m_pClient, address, port);
     }
 
+    public void login(String username, String password)
+    {
+        loginNative(m_pClient, username, password);
+    }
     public void disconnect()
     {
         disconnectNative(m_pClient);
@@ -54,6 +59,20 @@ public class ChatClient implements Closeable
     {
         m_listener.onDisconnected();
     }
+
+    public void notifyOnLoginSuccessfull()
+    {
+        m_listener.onLoginSuccessfull();
+    }
+    public void notifyOnLoginFailed(String message)
+    {
+        m_listener.onLoginFailed(message);
+    }
+    public void notifyOnConnectionError()
+    {
+        m_listener.onConnectionError();
+    }
+
     @Override
     public void close() throws IOException
     {
@@ -64,7 +83,9 @@ public class ChatClient implements Closeable
 
     private native long createClientNative();
 
-    private native void connectNative(long client, String address, int port);
+    private native void setServerPropertiesNative(long client, String address, int port);
+
+    private native void loginNative(long client, String username, String password);
 
     private native void disconnectNative(long client);
 

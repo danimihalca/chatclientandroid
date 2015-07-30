@@ -42,7 +42,8 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
         {
             public void onClick(View v)
             {
-                client.connect(addressField.getText().toString(), 9003);
+                client.setServerProperties(addressField.getText().toString(), 9003);
+                client.login("user1","pwd1");
                 connectButton.setEnabled(false);
                 disconnectButton.setEnabled(true);
                 addressField.setEnabled(false);
@@ -91,7 +92,7 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
     {
         String message = messageField.getText().toString();
         String username = usernameField.getText().toString();
-        client.sendMessage('<'+username+">:"+message);
+        client.sendMessage('<' + username + ">:" + message);
         messageField.setText("");
     }
 
@@ -203,6 +204,63 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
                 messagesView.append("DISCONNECTED\n");
                 Context context = getApplicationContext();
                 CharSequence text = "Disconnected!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        });
+    }
+
+    @Override
+    public void onLoginSuccessfull()
+    {
+        MainActivity.this.runOnUiThread(new Runnable()
+        {
+
+            public void run()
+            {
+                messagesView.append("Login successfull\n");
+                Context context = getApplicationContext();
+                CharSequence text = "Login successfull!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        });
+    }
+
+    @Override
+    public void onLoginFailed(final String message)
+    {
+        MainActivity.this.runOnUiThread(new Runnable()
+        {
+
+            public void run()
+            {
+                messagesView.append("Login failed"+message+"\n");
+                Context context = getApplicationContext();
+                CharSequence text = "Login failed:" + message;
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        });
+    }
+
+    @Override
+    public void onConnectionError()
+    {
+        MainActivity.this.runOnUiThread(new Runnable()
+        {
+
+            public void run()
+            {
+                messagesView.append("Connection error\n");
+                Context context = getApplicationContext();
+                CharSequence text = "Connection error!";
                 int duration = Toast.LENGTH_SHORT;
 
                 Toast toast = Toast.makeText(context, text, duration);
