@@ -14,9 +14,9 @@
             android:id="@+id/userNameField"
             android:singleLine="true"
             android:hint="User name"
-            android:layout_below="@+id/addressField" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:layout_toLeftOf="@+id/disconnectButton"
-            android:layout_toStartOf="@+id/disconnectButton"/>
+            android:layout_below="@+id/portField" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_alignRight="@+id/portField"
+            android:layout_alignEnd="@+id/portField"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,8 +34,8 @@
             android:hint="Address"
             android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignRight="@+id/userNameField" android:layout_alignEnd="@+id/userNameField"
-            android:text="192.168.0.3"/>
+            android:text="192.168.0.3" android:layout_toLeftOf="@+id/connectButton"
+            android:layout_toStartOf="@+id/connectButton"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,8 +63,8 @@
             android:id="@+id/scrollView" android:layout_above="@+id/sendButton"
             android:layout_alignParentStart="false"
             android:layout_alignParentLeft="false"
-            android:layout_below="@+id/disconnectButton" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="false">
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="false" android:layout_below="@+id/passwordField">
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -75,4 +75,20 @@
                 android:layout_alignTop="@+id/scrollView" android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"/>
     </ScrollView>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/portField"
+            android:layout_below="@+id/addressField" android:layout_toLeftOf="@+id/connectButton"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true" android:hint="port"
+            android:text="9003"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/passwordField"
+            android:layout_below="@+id/userNameField" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_alignRight="@+id/userNameField"
+            android:layout_alignEnd="@+id/userNameField" android:hint="password"/>
 </RelativeLayout>

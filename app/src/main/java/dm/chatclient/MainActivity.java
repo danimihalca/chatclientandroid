@@ -1,6 +1,7 @@
 package dm.chatclient;
 
 import android.content.Context;
+import android.os.Looper;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +21,9 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
     Button connectButton;
     Button disconnectButton;
     EditText addressField;
+    EditText portField;
     EditText usernameField;
+    EditText passwordField;
     EditText messageField;
     TextView messagesView;
 
@@ -33,7 +36,9 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
         connectButton = (Button) findViewById(R.id.connectButton);
         disconnectButton = (Button) findViewById(R.id.disconnectButton);
         addressField = (EditText) findViewById(R.id.addressField);
+        portField = (EditText) findViewById(R.id.portField);
         usernameField = (EditText) findViewById(R.id.userNameField);
+        passwordField = (EditText) findViewById(R.id.passwordField);
 
         messageField = (EditText) findViewById(R.id.messageField);
         messagesView = (TextView) findViewById(R.id.messagesView);
@@ -42,12 +47,10 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
         {
             public void onClick(View v)
             {
-                client.setServerProperties(addressField.getText().toString(), 9003);
-                client.login("user1","pwd1");
                 connectButton.setEnabled(false);
-                disconnectButton.setEnabled(true);
-                addressField.setEnabled(false);
-                usernameField.setEnabled(false);
+                client.setServerProperties(addressField.getText().toString(), Integer.parseInt(portField.getText()
+                                                                                                       .toString()));
+                client.login(usernameField.getText().toString(),passwordField.getText().toString());
             }
         });
 
@@ -56,10 +59,7 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
             public void onClick(View v)
             {
                 client.disconnect();
-                connectButton.setEnabled(true);
                 disconnectButton.setEnabled(false);
-                addressField.setEnabled(true);
-                usernameField.setEnabled(true);
             }
         });
         messageField.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -189,6 +189,10 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
 
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
+
+                disconnectButton.setEnabled(true);
+                addressField.setEnabled(false);
+                usernameField.setEnabled(false);
             }
         });
     }
@@ -208,6 +212,10 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
 
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
+
+                connectButton.setEnabled(true);
+                addressField.setEnabled(true);
+                usernameField.setEnabled(true);
             }
         });
     }
@@ -239,7 +247,7 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
 
             public void run()
             {
-                messagesView.append("Login failed"+message+"\n");
+                messagesView.append("Login failed:"+message+"\n");
                 Context context = getApplicationContext();
                 CharSequence text = "Login failed:" + message;
                 int duration = Toast.LENGTH_SHORT;
@@ -253,19 +261,24 @@ public class MainActivity extends ActionBarActivity implements IChatMessageListe
     @Override
     public void onConnectionError()
     {
-        MainActivity.this.runOnUiThread(new Runnable()
-        {
-
-            public void run()
+            MainActivity.this.runOnUiThread(new Runnable()
             {
-                messagesView.append("Connection error\n");
-                Context context = getApplicationContext();
-                CharSequence text = "Connection error!";
-                int duration = Toast.LENGTH_SHORT;
 
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            }
-        });
+                public void run()
+                {
+                    connectButton.setEnabled(true);
+                    addressField.setEnabled(true);
+                    usernameField.setEnabled(true);
+                    messagesView.append("Connection error\n");
+                    Context context = getApplicationContext();
+                    CharSequence text = "Connection error!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                }
+            });
     }
 }
+
