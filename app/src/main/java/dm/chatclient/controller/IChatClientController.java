@@ -1,5 +1,7 @@
 package dm.chatclient.controller;
 
+import java.nio.ByteBuffer;
+
 public interface IChatClientController
 {
     void addListener(IChatClientListener listener);
@@ -8,11 +10,5 @@ public interface IChatClientController
     void login(String username, String password);
     void disconnect();
     void sendMessage(String message);
-
-    void notifyOnMessage(String message);
-    void notifyOnConnected();
-    void notifyOnDisconnected();
-    void notifyOnLoginSuccessful();
-    void notifyOnLoginFailed(String message);
-    void notifyOnConnectionError();
+    void requestContacts();
 }

@@ -32,7 +32,8 @@
                 android:layout_alignParentRight="false" android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="false"
                 android:layout_alignLeft="@+id/passwordInput" android:layout_alignStart="@+id/passwordInput"
-                android:singleLine="true" android:layout_marginTop="5dp" android:layout_marginRight="5dp"/>
+                android:singleLine="true" android:layout_marginTop="5dp" android:layout_marginRight="5dp"
+                android:text="user1" android:textAlignment="center"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,7 +50,8 @@
                 android:ems="8"
                 android:id="@+id/passwordInput"
                 android:layout_below="@+id/usernameInput" android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" android:singleLine="true" android:layout_marginRight="5dp"/>
+                android:layout_alignParentEnd="true" android:singleLine="true" android:layout_marginRight="5dp"
+                android:text="pwd1" android:textAlignment="center"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -67,11 +67,10 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
             {
                 m_loginButton.setEnabled(true);
                 displayToast("Login successful!");
-
-                Intent intent = new Intent(LoginActivity.this, ContactListActivity.class);
-                startActivity(intent);
             }
         });
+        Intent intent = new Intent(LoginActivity.this, ContactListActivity.class);
+        startActivity(intent);
     }
 
     @Override
