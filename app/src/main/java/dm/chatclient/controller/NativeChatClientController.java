@@ -1,14 +1,12 @@
-package dm.chatclient;
-
-import android.util.Log;
+package dm.chatclient.controller;
 
 import java.io.Closeable;
 import java.io.IOException;
 
-public class ChatClient implements Closeable
+public class NativeChatClientController implements Closeable, IChatClientController
 {
     private long m_pClient;
-    private IChatMessageListener m_listener;
+    private IChatClientListener m_listener;
     static
     {
         System.loadLibrary("jsoncpp");
@@ -17,11 +15,12 @@ public class ChatClient implements Closeable
         System.loadLibrary("chatClientJNI");
     }
 
-    public ChatClient()
+    public NativeChatClientController()
     {
         m_pClient = createClientNative();
     }
-    public void addListener(IChatMessageListener listener)
+
+    public void addListener(IChatClientListener listener)
     {
         m_listener = listener;
     }
@@ -35,6 +34,7 @@ public class ChatClient implements Closeable
     {
         loginNative(m_pClient, username, password);
     }
+
     public void disconnect()
     {
         disconnectNative(m_pClient);
@@ -60,14 +60,16 @@ public class ChatClient implements Closeable
         m_listener.onDisconnected();
     }
 
-    public void notifyOnLoginSuccessfull()
+    public void notifyOnLoginSuccessful()
     {
-        m_listener.onLoginSuccessfull();
+        m_listener.onLoginSuccessful();
     }
+
     public void notifyOnLoginFailed(String message)
     {
         m_listener.onLoginFailed(message);
     }
+
     public void notifyOnConnectionError()
     {
         m_listener.onConnectionError();
@@ -76,9 +78,14 @@ public class ChatClient implements Closeable
     @Override
     public void close() throws IOException
     {
-        Log.i("ChatClient", "called close()");
         destroyClientNative(m_pClient);
         m_pClient = 0;
+    }
+
+    @Override
+    protected void finalize() throws Throwable
+    {
+        close();
     }
 
     private native long createClientNative();

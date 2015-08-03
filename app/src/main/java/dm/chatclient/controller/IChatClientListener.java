@@ -1,11 +1,11 @@
-package dm.chatclient;
+package dm.chatclient.controller;
 
-public interface IChatMessageListener
+public interface IChatClientListener
 {
     void onNewMessage(String message);
     void onConnected();
     void onDisconnected();
-    void onLoginSuccessfull();
+    void onLoginSuccessful();
     void onLoginFailed(String message);
     void onConnectionError();
 }
