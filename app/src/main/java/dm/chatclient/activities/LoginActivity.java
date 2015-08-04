@@ -33,6 +33,11 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if (getIntent().getBooleanExtra("EXIT", false))
+        {
+            finish();
+        }
+
         m_controller = ((ChatClientApplication) getApplication()).getController();
         m_controller.addListener(this);
 
@@ -44,6 +49,8 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
 
         Button advancedSettingsButton =(Button) findViewById(R.id.advancedSettingsButton);
         advancedSettingsButton.setOnClickListener(new AdvancedSettingsButtonListener());
+
+
     }
 
     @Override
