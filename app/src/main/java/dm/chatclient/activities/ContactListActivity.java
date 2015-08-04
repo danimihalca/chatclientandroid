@@ -66,11 +66,16 @@ public class ContactListActivity extends AppCompatActivity implements IChatClien
     }
 
     @Override
-    public void onContactsReceived(List<Contact> contactList)
+    public void onContactsReceived(final List<Contact> contactList)
     {
         Log.d("OnContactsReceived", contactList.toString());
-
-        contactListAdapter.setContactList(contactList);
-        contactListAdapter.notifyDataSetChanged();
-    }
-}
+            this.runOnUiThread(new Runnable()
+            {
+                public void run()
+                {
+                    contactListAdapter.setContactList(contactList);
+                    contactListAdapter.notifyDataSetChanged();
+                }
+            });
+      }
+  }
