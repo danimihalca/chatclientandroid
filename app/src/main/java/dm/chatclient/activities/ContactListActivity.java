@@ -15,6 +15,7 @@ import dm.chatclient.R;
 import dm.chatclient.controller.IChatClientController;
 import dm.chatclient.controller.IChatClientListener;
 import dm.chatclient.model.Contact;
+import dm.chatclient.model.Message;
 import dm.chatclient.utils.ContactListAdapter;
 
 import java.util.List;
@@ -66,8 +67,9 @@ public class ContactListActivity extends AppCompatActivity implements IChatClien
     }
 
     @Override
-    public void onNewMessage(String message)
+    public boolean onNewMessage(Message message)
     {
+        return false;
     }
 
     @Override
@@ -93,6 +95,18 @@ public class ContactListActivity extends AppCompatActivity implements IChatClien
     @Override
     public void onConnectionError()
     {
+    }
+
+    @Override
+    public void onContactUpdated(Contact contact)
+    {
+        this.runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                contactListAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -128,9 +142,6 @@ public class ContactListActivity extends AppCompatActivity implements IChatClien
             Contact c =(Contact) adapterView.getItemAtPosition(i);
 
             intent.putExtra("ContactId", c.getId());
-            intent.putExtra("ContactUserName", c.getUserName());
-            intent.putExtra("ContactFullName", c.getFullName());
-            intent.putExtra("ContactOnline", c.isOnline());
             startActivity(intent);
         }
     }

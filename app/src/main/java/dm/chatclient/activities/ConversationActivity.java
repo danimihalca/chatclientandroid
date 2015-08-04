@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import dm.chatclient.ChatClientApplication;
 import dm.chatclient.R;
 import dm.chatclient.controller.IChatClientController;
@@ -32,6 +31,14 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
     private MessageListAdapter m_messageListAdapter;
 
     @Override
+    public void onBackPressed()
+    {
+        m_controller.removeListener(this);
+        finish();
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -44,17 +51,23 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
 
         Intent intent = getIntent();
         int id = intent.getIntExtra("ContactId", -1);
-        String userName = intent.getStringExtra("ContactUserName");
-        String fullName = intent.getStringExtra("ContactFullName");
-        Boolean isOnline = intent.getBooleanExtra("ContactOnline", false);
-        m_contact = new Contact(id,userName,fullName,isOnline);
-        setTitle(fullName);
+
+        m_contact = m_controller.getContact(id);
+        if (m_contact.getUnreadMessagesCount() != 0)
+        {
+            //TODO: verify if last view from listview is visibile
+            // or how many and decrement from unread messages count
+            m_contact.setUnreadMessagesCount(0);
+            m_controller.notifyOnContactUpdated(m_contact);
+        }
+        setTitle(m_contact.getFullName());
 
         m_sendButton = (Button) findViewById(R.id.sendButton);
         m_sendButton.setOnClickListener(new SendButtonListener());
 
+        List<Message> receivedMessages = m_controller.getMessages(m_contact);
         m_messageListView = (ListView) findViewById(R.id.conversationListView);
-        m_messageListAdapter = new MessageListAdapter(getApplicationContext());
+        m_messageListAdapter = new MessageListAdapter(getApplicationContext(),receivedMessages);
         m_messageListView.setAdapter(m_messageListAdapter);
 
     }
@@ -72,16 +85,20 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
 
 
     @Override
-    public void onNewMessage(final String message)
+    public boolean onNewMessage(final Message message)
     {
-        this.runOnUiThread(new Runnable()
+        if (m_contact.equals(message.getSender()))
         {
-            public void run()
+            this.runOnUiThread(new Runnable()
             {
-                m_messageListAdapter.add(new Message("SENDER",message, Message.Message_Type.RECEIVED, null));
-                m_messageListAdapter.notifyDataSetChanged();
-            }
-        });
+                public void run()
+                {
+                    m_messageListAdapter.notifyDataSetChanged();
+                }
+            });
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -107,6 +124,12 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
     @Override
     public void onConnectionError()
     {
+    }
+
+    @Override
+    public void onContactUpdated(Contact contact)
+    {
+
     }
 
     @Override

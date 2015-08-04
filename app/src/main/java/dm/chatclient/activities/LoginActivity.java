@@ -15,6 +15,7 @@ import dm.chatclient.controller.IChatClientListener;
 
 import dm.chatclient.ChatClientApplication;
 import dm.chatclient.model.Contact;
+import dm.chatclient.model.Message;
 
 import java.util.List;
 
@@ -54,8 +55,10 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
     }
 
     @Override
-    public void onNewMessage(String message)
+    public boolean onNewMessage(Message message)
     {
+        //TODO: update counter
+        return false;
     }
 
     @Override
@@ -108,6 +111,12 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
              }
          });
      }
+
+    @Override
+    public void onContactUpdated(Contact contact)
+    {
+
+    }
 
     @Override
     public void onContactsReceived(List<Contact> contactList)

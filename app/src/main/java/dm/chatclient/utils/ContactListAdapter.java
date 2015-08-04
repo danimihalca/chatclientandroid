@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dm.chatclient.R;
+import org.w3c.dom.Text;
 
 public class ContactListAdapter extends ArrayAdapter<Contact>
 {
@@ -55,10 +56,12 @@ public class ContactListAdapter extends ArrayAdapter<Contact>
         TextView userNameView = (TextView) view.findViewById(R.id.userNameView);
         TextView fullNameView = (TextView) view.findViewById(R.id.fullNameView);
         ImageView onlineImageView = (ImageView) view.findViewById(R.id.onlineImageView);
+        TextView unreadMessagesCountView = (TextView) view.findViewById(R.id.unreadMessagesCountView);
         Contact contact = getItem(i);
 
         userNameView.setText(contact.getUserName());
         fullNameView.setText(contact.getFullName());
+        unreadMessagesCountView.setText(Integer.toString(contact.getUnreadMessagesCount()));
 
         if (contact.isOnline())
         {

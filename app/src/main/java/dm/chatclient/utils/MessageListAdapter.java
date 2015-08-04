@@ -12,6 +12,7 @@ import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MessageListAdapter extends ArrayAdapter<Message>
 {
@@ -20,6 +21,12 @@ public class MessageListAdapter extends ArrayAdapter<Message>
         super(context, 0, new ArrayList<Message>());
 
     }
+
+    public MessageListAdapter(Context context, List<Message> messageList)
+    {
+        super(context, 0, messageList);
+    }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup)
     {
@@ -34,7 +41,7 @@ public class MessageListAdapter extends ArrayAdapter<Message>
 
         Message message = getItem(i);
 
-        senderView.setText(message.geSender());
+        senderView.setText(message.getSender().getFullName());
         messageView.setText(message.getMessageText());
 
         return view;

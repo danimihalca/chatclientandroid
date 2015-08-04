@@ -11,6 +11,7 @@ import android.widget.*;
 import dm.chatclient.controller.NativeChatClientController;
 import dm.chatclient.controller.IChatClientListener;
 import dm.chatclient.model.Contact;
+import dm.chatclient.model.Message;
 
 import java.io.IOException;
 import java.util.List;
@@ -128,27 +129,33 @@ public class MainActivity extends AppCompatActivity implements IChatClientListen
     }
 
 
+//    @Override
+//    public void onNewMessage(final String message)
+//    {
+//        MainActivity.this.runOnUiThread(new Runnable()
+//        {
+//
+//            public void run()
+//            {
+//
+//                messagesView.append(message+"\n");
+//                final ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+//                scrollView.post(new Runnable()
+//                {
+//                    @Override
+//                    public void run()
+//                    {
+//                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+//                    }
+//                });
+//            }
+//        });
+//    }
+
     @Override
-    public void onNewMessage(final String message)
+    public boolean onNewMessage(Message message)
     {
-        MainActivity.this.runOnUiThread(new Runnable()
-        {
-
-            public void run()
-            {
-
-                messagesView.append(message+"\n");
-                final ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
-                scrollView.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                });
-            }
-        });
+        return false;
     }
 
     @Override
@@ -255,6 +262,12 @@ public class MainActivity extends AppCompatActivity implements IChatClientListen
 
                 }
             });
+    }
+
+    @Override
+    public void onContactUpdated(Contact contact)
+    {
+
     }
 
     @Override

@@ -6,6 +6,7 @@ public class Contact
     private String m_userName;
     private String m_fullName;
     private boolean m_isOnline;
+    private int m_unreadMessagesCount;
 
     public Contact(int id, String userName, String fullName, boolean isOnline)
     {
@@ -13,6 +14,7 @@ public class Contact
         this.m_userName = userName;
         this.m_fullName = fullName;
         this.m_isOnline = isOnline;
+        this.m_unreadMessagesCount = 0;
     }
 
     public int getId()
@@ -64,5 +66,39 @@ public class Contact
                 ", m_fullName='" + m_fullName + '\'' +
                 ", m_isOnline=" + m_isOnline +
                 '}';
+    }
+
+    public int getUnreadMessagesCount()
+    {
+        return m_unreadMessagesCount;
+    }
+
+    public void setUnreadMessagesCount(int m_unreadMessagesCount)
+    {
+        this.m_unreadMessagesCount = m_unreadMessagesCount;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
+
+        Contact contact = (Contact) o;
+
+        return m_id == contact.m_id;
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return m_id;
     }
 }

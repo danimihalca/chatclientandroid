@@ -8,16 +8,15 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class NativeChatClientController implements Closeable, IChatClientController
 {
     private long m_pClient;
     private List<IChatClientListener> m_listeners;
-    private List<Message> m_messages;
+
+    private Map<Contact,List<Message>> m_messages;
+    private Map<Integer,Contact> m_contacts;
     static
     {
         System.loadLibrary("jsoncpp");
@@ -30,27 +29,27 @@ public class NativeChatClientController implements Closeable, IChatClientControl
     {
         m_pClient = createClientNative();
         m_listeners = new LinkedList<IChatClientListener>();
-        m_messages = new ArrayList<Message>();
+
+        m_contacts = new HashMap<Integer, Contact>();
+        m_messages = new HashMap<Contact,List<Message>>();
     }
 
-//    public List<Message> getMesssages(int senderId)
-//    {
-//        List<Message> senderMessages = new ArrayList<Message>();
-//
-//        Iterator<Message> iterator = m_messages.iterator();
-//        while (iterator.hasNext())
-//        {
-//            Message m = iterator.next();
-//            if (m.()  == senderId)
-//            {
-//
-//            }
-//        }
-//    }
 
     public void addListener(IChatClientListener listener)
     {
         m_listeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(IChatClientListener listener)
+    {
+        m_listeners.remove(listener);
+    }
+
+    @Override
+    public Contact getContact(int id)
+    {
+        return m_contacts.get(id);
     }
 
     public void setServerProperties(String address, int port)
@@ -79,12 +78,49 @@ public class NativeChatClientController implements Closeable, IChatClientControl
         requestContactsNative(m_pClient);
     }
 
-    public void notifyOnMessage(String message)
+    @Override
+    public List<Message> getMessages(Contact sender)
     {
+        List<Message> messages = new ArrayList<Message>();
+        for (Message m: m_messages.get(sender))
+        {
+            if (sender.equals(m.getSender()))
+            {
+                messages.add(m);
+            }
+        }
+        return m_messages.get(sender);
+    }
+
+    public void notifyOnMessage(int senderId,String message)
+    {
+        Contact sender = m_contacts.get(senderId);
+        int unreadedMessages = sender.getUnreadMessagesCount();
+        Message receivedMessage = new Message(sender,message);
+        m_messages.get(sender).add(receivedMessage);
+        boolean readingMessage = false;
         for(IChatClientListener listener: m_listeners)
         {
-            listener.onNewMessage(message);
+            if(listener.onNewMessage(receivedMessage))
+            {
+                readingMessage = true;
+            }
         }
+        if (readingMessage && unreadedMessages != 0)
+        {
+            Log.d("notifyOnMessage","reading");
+            sender.setUnreadMessagesCount(0);
+            notifyOnContactUpdated(sender);
+            m_contacts.put(senderId,sender);
+        }
+        else if (!readingMessage)
+        {
+            Log.d("notifyOnMessage",Integer.toString(unreadedMessages+1));
+            sender.setUnreadMessagesCount(++unreadedMessages);
+            notifyOnContactUpdated(sender);
+            m_contacts.put(senderId, sender);
+        }
+        Log.d("notifyOnMessage",m_contacts.toString());
     }
 
     public void notifyOnConnected()
@@ -102,7 +138,13 @@ public class NativeChatClientController implements Closeable, IChatClientControl
             listener.onDisconnected();
         }
     }
-
+    public void notifyOnContactUpdated(Contact contact)
+    {
+        for(IChatClientListener listener: m_listeners)
+        {
+            listener.onContactUpdated(contact);
+        }
+    }
     public void notifyOnLoginSuccessful()
     {
         for(IChatClientListener listener: m_listeners)
@@ -127,7 +169,6 @@ public class NativeChatClientController implements Closeable, IChatClientControl
 
     public void notifyOnContactsReceived(byte[] contactsBuffer, int size)
     {
-        List<Contact> contacts = new ArrayList<Contact>();
         ByteBuffer bb = ByteBuffer.wrap(contactsBuffer);
         bb.order(ByteOrder.LITTLE_ENDIAN);
         for (int i = 0; i<size; ++i)
@@ -170,13 +211,14 @@ public class NativeChatClientController implements Closeable, IChatClientControl
             Log.d("Controller","F:"+fullname);
 
             boolean isOnline = bb.get(count++) != 0;
-
-            contacts.add(new Contact(id,username,fullname,isOnline));
+            Contact contact  = new Contact(id,username,fullname,isOnline);
+            m_contacts.put(id,contact);
+            m_messages.put(contact, new ArrayList<Message>());
         }
 
         for(IChatClientListener listener: m_listeners)
         {
-            listener.onContactsReceived(contacts);
+            listener.onContactsReceived(new ArrayList<Contact>(m_contacts.values()));
         }
     }
 
