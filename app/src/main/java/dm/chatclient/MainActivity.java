@@ -10,8 +10,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import dm.chatclient.controller.NativeChatClientController;
 import dm.chatclient.controller.IChatClientListener;
+import dm.chatclient.model.Contact;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements IChatClientListener
@@ -253,6 +255,12 @@ public class MainActivity extends AppCompatActivity implements IChatClientListen
 
                 }
             });
+    }
+
+    @Override
+    public void onContactsReceived(List<Contact> contactList)
+    {
+
     }
 }
 

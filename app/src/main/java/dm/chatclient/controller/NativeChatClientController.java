@@ -7,6 +7,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -107,7 +108,7 @@ public class NativeChatClientController implements Closeable, IChatClientControl
 
     public void notifyOnContactsReceived(byte[] contactsBuffer, int size)
     {
-        List<Contact> contacts = new LinkedList<Contact>();
+        List<Contact> contacts = new ArrayList<Contact>();
         ByteBuffer bb = ByteBuffer.wrap(contactsBuffer);
         bb.order(ByteOrder.LITTLE_ENDIAN);
         for (int i = 0; i<size; ++i)
@@ -135,7 +136,7 @@ public class NativeChatClientController implements Closeable, IChatClientControl
                 username += (char)c;
             }
             while (c != 0);
-            Log.d("Controller","U:"+username);
+            Log.d("Controller", "U:" + username);
             String fullname="";
             do
             {
@@ -148,6 +149,15 @@ public class NativeChatClientController implements Closeable, IChatClientControl
             }
             while (c != 0);
             Log.d("Controller","F:"+fullname);
+
+            boolean isOnline = bb.get(count++) != 0;
+
+            contacts.add(new Contact(id,username,fullname,isOnline));
+        }
+
+        for(IChatClientListener listener: m_listeners)
+        {
+            listener.onContactsReceived(contacts);
         }
     }
 

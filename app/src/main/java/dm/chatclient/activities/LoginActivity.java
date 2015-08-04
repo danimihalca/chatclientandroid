@@ -14,6 +14,9 @@ import dm.chatclient.controller.IChatClientController;
 import dm.chatclient.controller.IChatClientListener;
 
 import dm.chatclient.ChatClientApplication;
+import dm.chatclient.model.Contact;
+
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements IChatClientListener
 {
@@ -99,7 +102,13 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
          });
      }
 
-     private void displayToast(String message)
+    @Override
+    public void onContactsReceived(List<Contact> contactList)
+    {
+
+    }
+
+    private void displayToast(String message)
      {
          Context context = getApplicationContext();
 

@@ -54,4 +54,15 @@ public class Contact
     {
         this.m_isOnline = m_isOnline;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Contact{" +
+                "m_id=" + m_id +
+                ", m_userName='" + m_userName + '\'' +
+                ", m_fullName='" + m_fullName + '\'' +
+                ", m_isOnline=" + m_isOnline +
+                '}';
+    }
 }
