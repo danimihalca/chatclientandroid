@@ -2,12 +2,14 @@ package dm.chatclient.controller;
 
 import android.util.Log;
 import dm.chatclient.model.Contact;
+import dm.chatclient.model.Message;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class NativeChatClientController implements Closeable, IChatClientControl
 {
     private long m_pClient;
     private List<IChatClientListener> m_listeners;
+    private List<Message> m_messages;
     static
     {
         System.loadLibrary("jsoncpp");
@@ -27,7 +30,23 @@ public class NativeChatClientController implements Closeable, IChatClientControl
     {
         m_pClient = createClientNative();
         m_listeners = new LinkedList<IChatClientListener>();
+        m_messages = new ArrayList<Message>();
     }
+
+//    public List<Message> getMesssages(int senderId)
+//    {
+//        List<Message> senderMessages = new ArrayList<Message>();
+//
+//        Iterator<Message> iterator = m_messages.iterator();
+//        while (iterator.hasNext())
+//        {
+//            Message m = iterator.next();
+//            if (m.()  == senderId)
+//            {
+//
+//            }
+//        }
+//    }
 
     public void addListener(IChatClientListener listener)
     {
@@ -49,9 +68,9 @@ public class NativeChatClientController implements Closeable, IChatClientControl
         disconnectNative(m_pClient);
     }
 
-    public void sendMessage(String message)
+    public void sendMessage(int receiverId, String message)
     {
-        sendMessageNative(m_pClient, message);
+        sendMessageNative(m_pClient, receiverId, message);
     }
 
     @Override
@@ -185,7 +204,7 @@ public class NativeChatClientController implements Closeable, IChatClientControl
 
     private native void disconnectNative(long client);
 
-    private native void sendMessageNative(long client, String message);
+    private native void sendMessageNative(long client, int receiverId, String message);
 
     private native void destroyClientNative(long client);
 

@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements IChatClientListen
     {
         String message = messageField.getText().toString();
         String username = usernameField.getText().toString();
-        client.sendMessage('<' + username + ">:" + message);
+//        client.sendMessage('<' + username + ">:" + message);
         messageField.setText("");
     }
 
