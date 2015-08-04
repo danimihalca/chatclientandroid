@@ -1,12 +1,13 @@
 package dm.chatclient.activities;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import dm.chatclient.ChatClientApplication;
@@ -26,6 +27,26 @@ public class ContactListActivity extends AppCompatActivity implements IChatClien
     private ListView m_contactListView;
     ContactListAdapter contactListAdapter;
 
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_contact_list);
+
+        m_contactListView = (ListView) findViewById(R.id.contactListView);
+        contactListAdapter = new ContactListAdapter(getApplicationContext());
+        m_contactListView.setAdapter(contactListAdapter);
+        m_contactListView.setOnItemClickListener(new ContactClickListener());
+
+        m_controller = ((ChatClientApplication) getApplication()).getController();
+        m_controller.addListener(this);
+        m_controller.requestContacts();
+
+        m_close = false;
+    }
+
     @Override
     public void onBackPressed()
     {
@@ -42,23 +63,6 @@ public class ContactListActivity extends AppCompatActivity implements IChatClien
             displayToast("Press again to exit");
             m_close = true;
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_list);
-
-        m_contactListView = (ListView) findViewById(R.id.contactListView);
-        contactListAdapter = new ContactListAdapter(getApplicationContext());
-        m_contactListView.setAdapter(contactListAdapter);
-
-        m_controller = ((ChatClientApplication) getApplication()).getController();
-        m_controller.addListener(this);
-        m_controller.requestContacts();
-
-        m_close = false;
     }
 
     @Override
@@ -111,5 +115,23 @@ public class ContactListActivity extends AppCompatActivity implements IChatClien
 
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    class ContactClickListener implements ListView.OnItemClickListener
+    {
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+        {
+            Intent intent = new Intent(ContactListActivity.this, ConversationActivity.class);
+
+            Contact c =(Contact) adapterView.getItemAtPosition(i);
+
+            intent.putExtra("ContactId", c.getId());
+            intent.putExtra("ContactUserName", c.getUserName());
+            intent.putExtra("ContactFullName", c.getFullName());
+            intent.putExtra("ContactOnline", c.isOnline());
+            startActivity(intent);
+        }
     }
   }

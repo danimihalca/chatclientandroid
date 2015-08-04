@@ -34,7 +34,6 @@ public class ContactListAdapter extends ArrayAdapter<Contact>
         }
     }
 
-
     @Override
     public View getView(int i, View view, ViewGroup viewGroup)
     {
@@ -47,8 +46,7 @@ public class ContactListAdapter extends ArrayAdapter<Contact>
         TextView fullNameView = (TextView) view.findViewById(R.id.fullNameView);
 
         Contact contact = getItem(i);
-
-
+        
         userNameView.setText(contact.getUserName());
         fullNameView.setText(contact.getFullName());
 
