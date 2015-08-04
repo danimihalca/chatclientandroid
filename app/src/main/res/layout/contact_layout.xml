@@ -15,4 +15,11 @@
             android:id="@+id/userNameView"
             android:layout_below="@+id/fullNameView" android:layout_alignRight="@+id/fullNameView"
             android:layout_alignEnd="@+id/fullNameView" android:layout_margin="5dp"/>
+    <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/onlineImageView"
+            android:scaleType="fitXY"
+            android:layout_alignBottom="@+id/fullNameView" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" android:layout_margin="5dp"/>
 </RelativeLayout>
