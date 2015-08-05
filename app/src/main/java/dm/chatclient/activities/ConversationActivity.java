@@ -80,6 +80,7 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
         {
             String message = m_messageInput.getText().toString();
             m_controller.sendMessage(m_contact.getId(), message);
+            m_messageListAdapter.notifyDataSetChanged();
         }
     }
 

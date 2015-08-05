@@ -70,6 +70,8 @@ public class NativeChatClientController implements Closeable, IChatClientControl
     public void sendMessage(int receiverId, String message)
     {
         sendMessageNative(m_pClient, receiverId, message);
+        Contact c = m_contacts.get(receiverId);
+        m_messages.get(c).add(new Message(new Contact(-1,"","ME",false),message));
     }
 
     @Override

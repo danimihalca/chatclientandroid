@@ -61,7 +61,18 @@ public class ContactListAdapter extends ArrayAdapter<Contact>
 
         userNameView.setText(contact.getUserName());
         fullNameView.setText(contact.getFullName());
-        unreadMessagesCountView.setText(Integer.toString(contact.getUnreadMessagesCount()));
+
+        int unreadMessagesCount = contact.getUnreadMessagesCount();
+        String unreadCountText;
+        if (unreadMessagesCount >0)
+        {
+            unreadCountText = Integer.toString(unreadMessagesCount);
+        }
+        else
+        {
+            unreadCountText = "";
+        }
+        unreadMessagesCountView.setText(unreadCountText);
 
         if (contact.isOnline())
         {
