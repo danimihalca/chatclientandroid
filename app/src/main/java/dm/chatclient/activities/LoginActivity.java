@@ -1,13 +1,11 @@
 package dm.chatclient.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import dm.chatclient.R;
 
 import dm.chatclient.controller.IChatClientController;
@@ -16,6 +14,7 @@ import dm.chatclient.controller.IChatClientListener;
 import dm.chatclient.ChatClientApplication;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
+import dm.chatclient.utils.ToastDisplayer;
 
 import java.util.List;
 
@@ -34,13 +33,7 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if (getIntent().getBooleanExtra("EXIT", false))
-        {
-            finish();
-        }
-
         m_controller = ((ChatClientApplication) getApplication()).getController();
-        m_controller.addListener(this);
 
         m_usernameInput = (EditText) findViewById(R.id.usernameInput);
         m_passwordInput = (EditText) findViewById(R.id.passwordInput);
@@ -50,14 +43,19 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
 
         Button advancedSettingsButton =(Button) findViewById(R.id.advancedSettingsButton);
         advancedSettingsButton.setOnClickListener(new AdvancedSettingsButtonListener());
-
-
     }
+
+    @Override
+    protected void onDestroy()
+    {
+        m_controller.removeListener(this);
+        super.onDestroy();
+    }
+
 
     @Override
     public boolean onNewMessage(Message message)
     {
-        //TODO: update counter
         return false;
     }
 
@@ -69,6 +67,14 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
     @Override
     public void onDisconnected()
     {
+        this.runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                m_loginButton.setEnabled(true);
+                ToastDisplayer.displayToast(getApplicationContext(), "Disconnected!");
+            }
+        });
     }
 
     @Override
@@ -78,8 +84,7 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
         {
             public void run()
             {
-                m_loginButton.setEnabled(true);
-                displayToast("Login successful!");
+                ToastDisplayer.displayToast(getApplicationContext(), "Login successful!");
             }
         });
         Intent intent = new Intent(LoginActivity.this, ContactListActivity.class);
@@ -94,7 +99,7 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
             public void run()
             {
                 m_loginButton.setEnabled(true);
-                displayToast("Login failed: " + message);
+                ToastDisplayer.displayToast(getApplicationContext(), "Login failed: " + message);
             }
         });
     }
@@ -107,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
              public void run()
              {
                  m_loginButton.setEnabled(true);
-                 displayToast("Connection error!");
+                 ToastDisplayer.displayToast(getApplicationContext(),"Connection error!");
              }
          });
      }
@@ -124,13 +129,11 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
 
     }
 
-    private void displayToast(String message)
-     {
-         Context context = getApplicationContext();
+    @Override
+    public void onContactOnlineStatusChanged(Contact contact)
+    {
 
-         Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
-         toast.show();
-     }
+    }
 
      class LoginButtonListener implements View.OnClickListener
      {
@@ -143,6 +146,7 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
              m_loginButton.setEnabled(false);
 
              m_controller.setServerProperties("192.168.0.3", 9003);
+             m_controller.addListener(LoginActivity.this);
 
              m_controller.login(username, password);
 

@@ -15,4 +15,5 @@ public interface IChatClientListener
     void onConnectionError();
     void onContactUpdated(Contact contact);
     void onContactsReceived(List<Contact> contactList);
+    void onContactOnlineStatusChanged(Contact contact);
 }

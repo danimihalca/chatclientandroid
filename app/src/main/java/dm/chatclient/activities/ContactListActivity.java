@@ -1,6 +1,5 @@
 package dm.chatclient.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import dm.chatclient.ChatClientApplication;
 import dm.chatclient.R;
 import dm.chatclient.controller.IChatClientController;
@@ -17,6 +15,7 @@ import dm.chatclient.controller.IChatClientListener;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 import dm.chatclient.utils.ContactListAdapter;
+import dm.chatclient.utils.ToastDisplayer;
 
 import java.util.List;
 
@@ -53,15 +52,13 @@ public class ContactListActivity extends AppCompatActivity implements IChatClien
     {
         if (m_close)
         {
+            m_controller.removeListener(this);
             m_controller.disconnect();
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("EXIT", true);
-            startActivity(intent);
+            super.onBackPressed();
         }
         else
         {
-            displayToast("Press again to exit");
+            ToastDisplayer.displayToast(getApplicationContext(), "Press again to exit");
             m_close = true;
         }
     }
@@ -80,6 +77,7 @@ public class ContactListActivity extends AppCompatActivity implements IChatClien
     @Override
     public void onDisconnected()
     {
+        finish();
     }
 
     @Override
@@ -123,13 +121,18 @@ public class ContactListActivity extends AppCompatActivity implements IChatClien
             });
     }
 
-    private void displayToast(String message)
+    @Override
+    public void onContactOnlineStatusChanged(Contact contact)
     {
-        Context context = getApplicationContext();
-
-        Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
-        toast.show();
+        this.runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                contactListAdapter.notifyDataSetChanged();
+            }
+        });
     }
+
 
     class ContactClickListener implements ListView.OnItemClickListener
     {

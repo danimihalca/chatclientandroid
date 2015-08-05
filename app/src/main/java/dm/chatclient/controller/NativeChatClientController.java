@@ -31,7 +31,7 @@ public class NativeChatClientController implements Closeable, IChatClientControl
         m_listeners = new LinkedList<IChatClientListener>();
 
         m_contacts = new HashMap<Integer, Contact>();
-        m_messages = new HashMap<Contact,List<Message>>();
+        m_messages = new HashMap<Contact, List<Message>>();
     }
 
 
@@ -64,6 +64,8 @@ public class NativeChatClientController implements Closeable, IChatClientControl
 
     public void disconnect()
     {
+        m_contacts.clear();
+        m_messages.clear();
         disconnectNative(m_pClient);
     }
 
@@ -71,7 +73,7 @@ public class NativeChatClientController implements Closeable, IChatClientControl
     {
         sendMessageNative(m_pClient, receiverId, message);
         Contact c = m_contacts.get(receiverId);
-        m_messages.get(c).add(new Message(new Contact(-1,"","ME",false),message));
+        m_messages.get(c).add(new Message(new Contact(-1, "", "ME", false), message));
     }
 
     @Override
@@ -127,6 +129,7 @@ public class NativeChatClientController implements Closeable, IChatClientControl
 
     public void notifyOnConnected()
     {
+        Log.d("notifyOnConnected",Integer.toString(m_listeners.size()));
         for(IChatClientListener listener: m_listeners)
         {
             listener.onConnected();
@@ -135,10 +138,12 @@ public class NativeChatClientController implements Closeable, IChatClientControl
 
     public void notifyOnDisconnected()
     {
+        Log.d("notifyOnDisconnected",Integer.toString(m_listeners.size()));
         for(IChatClientListener listener: m_listeners)
         {
             listener.onDisconnected();
         }
+        m_listeners.clear();
     }
     public void notifyOnContactUpdated(Contact contact)
     {
@@ -149,6 +154,7 @@ public class NativeChatClientController implements Closeable, IChatClientControl
     }
     public void notifyOnLoginSuccessful()
     {
+        Log.d("notifyOnLoginSuccessful",Integer.toString(m_listeners.size()));
         for(IChatClientListener listener: m_listeners)
         {
             listener.onLoginSuccessful();
@@ -157,17 +163,23 @@ public class NativeChatClientController implements Closeable, IChatClientControl
 
     public void notifyOnLoginFailed(String message)
     {
+        Log.d("notifyOnLoginFailed",Integer.toString(m_listeners.size()));
         for(IChatClientListener listener: m_listeners)
         {
             listener.onLoginFailed(message);
-        } }
+        }
+        m_listeners.clear();
+    }
 
     public void notifyOnConnectionError()
     {
+        Log.d("notifyOnConnectionError",Integer.toString(m_listeners.size()));
         for(IChatClientListener listener: m_listeners)
         {
             listener.onConnectionError();
-        }}
+        }
+        m_listeners.clear();
+    }
 
     public void notifyOnContactsReceived(byte[] contactsBuffer, int size)
     {
@@ -223,7 +235,16 @@ public class NativeChatClientController implements Closeable, IChatClientControl
             listener.onContactsReceived(new ArrayList<Contact>(m_contacts.values()));
         }
     }
-
+    void notifyOnContactOnlineStatusChanged(int contactId, boolean isOnline)
+    {
+        Log.d("online changed",Integer.toString(contactId) +" "+Boolean.toString(isOnline));
+        Contact c = m_contacts.get(contactId);
+        c.setOnline(isOnline);
+        for(IChatClientListener listener: m_listeners)
+        {
+            listener.onContactOnlineStatusChanged(c);
+        }
+    }
     @Override
     public void close() throws IOException
     {

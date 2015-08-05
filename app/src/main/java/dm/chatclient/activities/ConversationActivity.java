@@ -15,6 +15,7 @@ import dm.chatclient.controller.IChatClientListener;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 import dm.chatclient.utils.MessageListAdapter;
+import dm.chatclient.utils.ToastDisplayer;
 
 import java.util.List;
 
@@ -34,8 +35,7 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
     public void onBackPressed()
     {
         m_controller.removeListener(this);
-        finish();
-
+        super.onBackPressed();
     }
 
     @Override
@@ -110,6 +110,7 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
     @Override
     public void onDisconnected()
     {
+        finish();
     }
 
     @Override
@@ -136,5 +137,18 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
     @Override
     public void onContactsReceived(List<Contact> contactList)
     {
+    }
+
+    @Override
+    public void onContactOnlineStatusChanged(final Contact contact)
+    {
+        this.runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                ToastDisplayer.displayToast(getApplicationContext(), contact.getFullName() + " is now " + (contact.isOnline() ? "online" : "offline"));
+            }
+        });
     }
 }

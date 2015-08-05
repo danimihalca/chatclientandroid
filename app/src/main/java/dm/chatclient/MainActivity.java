@@ -275,5 +275,11 @@ public class MainActivity extends AppCompatActivity implements IChatClientListen
     {
 
     }
+
+    @Override
+    public void onContactOnlineStatusChanged(Contact contact)
+    {
+
+    }
 }
 
