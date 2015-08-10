@@ -49,16 +49,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
 
         m_contact = m_controller.getContact(id);
         m_contact.setUnreadMessagesCount(0);
-
-//        if (m_contact.getUnreadMessagesCount() != 0)
-//        {
-//            //TODO: verify if last view from listview is visibile
-//            // or how many and decrement from unread messages count
-//            m_contact.setUnreadMessagesCount(0);
-//
-//            //TODO :XXXXXXXXXXXXXXXXXXXX SEE IF IT IS NECESSARY XXXXXXXXXXXXXXXXx
-////            m_controller.notifyOnContactUpdated(m_contact);
-//        }
+        
         setTitle(m_contact.getFullName());
 
         m_sendButton = (Button) findViewById(R.id.sendButton);
@@ -102,6 +93,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
             {
                 if (m_contact.equals(message.getSender()))
                 {
+                    m_contact.setUnreadMessagesCount(0);
                     m_messageListAdapter.notifyDataSetChanged();
                 }
                 else

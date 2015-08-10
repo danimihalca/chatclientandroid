@@ -48,10 +48,10 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     }
 
     @Override
-    protected void onRestart()
+    protected void onResume()
     {
+        super.onResume();
         contactListAdapter.notifyDataSetChanged();
-        super.onRestart();
     }
 
     @Override

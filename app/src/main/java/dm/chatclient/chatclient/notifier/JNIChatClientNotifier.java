@@ -19,8 +19,8 @@ import java.util.List;
 public class JNIChatClientNotifier extends ChatClientNotifier implements Closeable
 {
     private long m_nativeListener;
-
     JNIChatClientNotifierProxy notifierProxy;
+
     static
     {
         System.loadLibrary("chatClientJNI");
@@ -30,7 +30,9 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
     {
         super(controller);
 
-        JNIChatClientNotifierProxy notif2ierProxy = createNotifierProxy();
+        notifierProxy= new JNIChatClientNotifierProxy(this);
+        initializeNotifierProxy();
+
         m_nativeListener = createNativeJNIListener(notifierProxy.getNativeNotifierProxy());
     }
 
@@ -49,12 +51,11 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
         }
     }
 
-    private JNIChatClientNotifierProxy createNotifierProxy()
+    private void initializeNotifierProxy()
     {
-        notifierProxy= new JNIChatClientNotifierProxy(this);
 
         notifierProxy.setOnConnectedCallback("notifyOnConnected");
-        notifierProxy.setOnDisonnectedCallback("notifyOnDisconnected");
+        notifierProxy.setOnDisconnectedCallback("notifyOnDisconnected");
         notifierProxy.setOnConnectionErrorCallback("notifyOnConnectionError");
         notifierProxy.setOnLoginSuccessfulCallback("notifyOnLoginSuccessful");
         notifierProxy.setOnLoginFailedCallback("notifyOnLoginFailed");
@@ -62,8 +63,6 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
         notifierProxy.setOnMessageReceivedCallback("notifyOnMessageReceivedFromJNI");
         notifierProxy.setOnContactsReceivedCallback("notifyOnContactsReceivedFromJNI");
         notifierProxy.setOnContactStatusChangedCallback("notifyOnContactOnlineStatusChangedFromJNI");
-
-        return notifierProxy;
     }
 
 
