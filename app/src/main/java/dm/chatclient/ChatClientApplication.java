@@ -1,7 +1,7 @@
 package dm.chatclient;
 
 import android.app.Application;
-import dm.chatclient.controller.NativeChatClientController;
+import dm.chatclient.controller.ChatClientController;
 import dm.chatclient.controller.IChatClientController;
 
 public class ChatClientApplication extends Application
@@ -11,7 +11,7 @@ public class ChatClientApplication extends Application
     @Override
     public void onCreate()
     {
-        m_chatClientController = new NativeChatClientController();
+        m_chatClientController = new ChatClientController();
     }
 
     public IChatClientController getController()

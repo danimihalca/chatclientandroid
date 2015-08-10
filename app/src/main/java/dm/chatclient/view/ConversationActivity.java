@@ -1,4 +1,4 @@
-package dm.chatclient.activities;
+package dm.chatclient.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import dm.chatclient.ChatClientApplication;
 import dm.chatclient.R;
+import dm.chatclient.chatclient.listener.IRuntimeListener;
 import dm.chatclient.controller.IChatClientController;
-import dm.chatclient.controller.IChatClientListener;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 import dm.chatclient.utils.MessageListAdapter;
@@ -20,7 +20,7 @@ import dm.chatclient.utils.ToastDisplayer;
 import java.util.List;
 
 
-public class ConversationActivity extends AppCompatActivity implements IChatClientListener
+public class ConversationActivity extends AppCompatActivity implements IRuntimeListener
 {
     private IChatClientController m_controller;
 
@@ -31,12 +31,7 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
 
     private MessageListAdapter m_messageListAdapter;
 
-    @Override
-    public void onBackPressed()
-    {
-        m_controller.removeListener(this);
-        super.onBackPressed();
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,7 +40,7 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
         setContentView(R.layout.activity_conversation);
 
         m_controller = ((ChatClientApplication) getApplication()).getController();
-        m_controller.addListener(this);
+        m_controller.addRuntimeListener(this);
 
         m_messageInput = (EditText) findViewById(R.id.messageInput);
 
@@ -53,13 +48,17 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
         int id = intent.getIntExtra("ContactId", -1);
 
         m_contact = m_controller.getContact(id);
-        if (m_contact.getUnreadMessagesCount() != 0)
-        {
-            //TODO: verify if last view from listview is visibile
-            // or how many and decrement from unread messages count
-            m_contact.setUnreadMessagesCount(0);
-            m_controller.notifyOnContactUpdated(m_contact);
-        }
+        m_contact.setUnreadMessagesCount(0);
+
+//        if (m_contact.getUnreadMessagesCount() != 0)
+//        {
+//            //TODO: verify if last view from listview is visibile
+//            // or how many and decrement from unread messages count
+//            m_contact.setUnreadMessagesCount(0);
+//
+//            //TODO :XXXXXXXXXXXXXXXXXXXX SEE IF IT IS NECESSARY XXXXXXXXXXXXXXXXx
+////            m_controller.notifyOnContactUpdated(m_contact);
+//        }
         setTitle(m_contact.getFullName());
 
         m_sendButton = (Button) findViewById(R.id.sendButton);
@@ -72,75 +71,62 @@ public class ConversationActivity extends AppCompatActivity implements IChatClie
 
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        m_controller.removeRuntimeListener(this);
+        finish();
+    }
+
     class SendButtonListener implements View.OnClickListener
     {
 
         @Override
         public void onClick(View view)
         {
-            String message = m_messageInput.getText().toString();
-            m_controller.sendMessage(m_contact.getId(), message);
+            String messageText = m_messageInput.getText().toString();
+
+            Message message = new Message(m_controller.getUser(),m_contact,messageText);
+            m_controller.sendMessage(message);
             m_messageListAdapter.notifyDataSetChanged();
         }
     }
 
 
     @Override
-    public boolean onNewMessage(final Message message)
+    public void onMessageReceived(final Message message)
     {
-        if (m_contact.equals(message.getSender()))
+        this.runOnUiThread(new Runnable()
         {
-            this.runOnUiThread(new Runnable()
+            public void run()
             {
-                public void run()
+                if (m_contact.equals(message.getSender()))
                 {
                     m_messageListAdapter.notifyDataSetChanged();
                 }
-            });
-            return true;
-        }
-        return false;
+                else
+                {
+                    ToastDisplayer.displayToast(getApplicationContext(), message.getSender().getFullName() + " send you a message");
+                }
+            }
+        });
     }
 
-    @Override
-    public void onConnected()
-    {
-    }
 
     @Override
     public void onDisconnected()
     {
+        m_controller.removeRuntimeListener(this);
         finish();
     }
 
     @Override
-    public void onLoginSuccessful()
+    public void onContactsReceived()
     {
     }
 
     @Override
-    public void onLoginFailed(String message)
-    {
-    }
-
-    @Override
-    public void onConnectionError()
-    {
-    }
-
-    @Override
-    public void onContactUpdated(Contact contact)
-    {
-
-    }
-
-    @Override
-    public void onContactsReceived(List<Contact> contactList)
-    {
-    }
-
-    @Override
-    public void onContactOnlineStatusChanged(final Contact contact)
+    public void onContactStatusChanged(final Contact contact)
     {
         this.runOnUiThread(new Runnable()
         {

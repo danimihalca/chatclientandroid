@@ -1,23 +1,16 @@
 package dm.chatclient.model;
 
-import java.util.Date;
-
 public class Message
 {
-//    public enum Message_Type
-//    {
-//        SENT,
-//        RECEIVED
-//    }
-
-//    private int m_id;
-    private Contact m_sender;
+    private BaseUser m_sender;
+    private BaseUser m_receiver;
     private String m_messageText;
 
 
-    public Message(Contact senderId, String message)
+    public Message(BaseUser sender, BaseUser receiver, String message)
     {
-        m_sender = senderId;
+        m_sender = sender;
+        m_receiver = receiver;
         m_messageText = message;
     }
 
@@ -31,13 +24,23 @@ public class Message
         this.m_messageText = m_messageText;
     }
 
-    public Contact getSender()
+    public BaseUser getSender()
     {
         return m_sender;
     }
 
-    public void setSender(Contact sender)
+    public void setSender(BaseUser sender)
     {
         this.m_sender = sender;
+    }
+
+    public BaseUser getReceiver()
+    {
+        return m_receiver;
+    }
+
+    public void setReceiver(BaseUser receiver)
+    {
+        m_receiver = receiver;
     }
 }

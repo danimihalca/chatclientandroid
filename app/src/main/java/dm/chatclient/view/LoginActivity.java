@@ -1,4 +1,4 @@
-package dm.chatclient.activities;
+package dm.chatclient.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,17 +8,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import dm.chatclient.R;
 
+import dm.chatclient.chatclient.listener.ILoginListener;
 import dm.chatclient.controller.IChatClientController;
-import dm.chatclient.controller.IChatClientListener;
 
 import dm.chatclient.ChatClientApplication;
-import dm.chatclient.model.Contact;
-import dm.chatclient.model.Message;
 import dm.chatclient.utils.ToastDisplayer;
 
-import java.util.List;
 
-public class LoginActivity extends AppCompatActivity implements IChatClientListener
+public class LoginActivity extends AppCompatActivity implements ILoginListener
 {
     private IChatClientController m_controller;
 
@@ -34,6 +31,7 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
         setContentView(R.layout.activity_login);
 
         m_controller = ((ChatClientApplication) getApplication()).getController();
+        m_controller.setLoginListener(LoginActivity.this);
 
         m_usernameInput = (EditText) findViewById(R.id.usernameInput);
         m_passwordInput = (EditText) findViewById(R.id.passwordInput);
@@ -45,19 +43,6 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
         advancedSettingsButton.setOnClickListener(new AdvancedSettingsButtonListener());
     }
 
-    @Override
-    protected void onDestroy()
-    {
-        m_controller.removeListener(this);
-        super.onDestroy();
-    }
-
-
-    @Override
-    public boolean onNewMessage(Message message)
-    {
-        return false;
-    }
 
     @Override
     public void onConnected()
@@ -117,23 +102,6 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
          });
      }
 
-    @Override
-    public void onContactUpdated(Contact contact)
-    {
-
-    }
-
-    @Override
-    public void onContactsReceived(List<Contact> contactList)
-    {
-
-    }
-
-    @Override
-    public void onContactOnlineStatusChanged(Contact contact)
-    {
-
-    }
 
      class LoginButtonListener implements View.OnClickListener
      {
@@ -146,7 +114,6 @@ public class LoginActivity extends AppCompatActivity implements IChatClientListe
              m_loginButton.setEnabled(false);
 
              m_controller.setServerProperties("192.168.0.3", 9003);
-             m_controller.addListener(LoginActivity.this);
 
              m_controller.login(username, password);
 

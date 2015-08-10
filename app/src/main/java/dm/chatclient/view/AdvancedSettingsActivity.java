@@ -1,4 +1,4 @@
-package dm.chatclient.activities;
+package dm.chatclient.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
