@@ -49,8 +49,8 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
 
         m_contact = m_controller.getContact(id);
         m_contact.setUnreadMessagesCount(0);
-        
-        setTitle(m_contact.getFullName());
+
+        setTitle(m_contact.getFirstName());
 
         m_sendButton = (Button) findViewById(R.id.sendButton);
         m_sendButton.setOnClickListener(new SendButtonListener());
@@ -98,7 +98,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
                 }
                 else
                 {
-                    ToastDisplayer.displayToast(getApplicationContext(), message.getSender().getFullName() + " send you a message");
+                    ToastDisplayer.displayToast(getApplicationContext(), message.getSender().getFirstName() + " send you a message");
                 }
             }
         });
@@ -125,7 +125,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
             @Override
             public void run()
             {
-                ToastDisplayer.displayToast(getApplicationContext(), contact.getFullName() + " is now " + (contact.isOnline() ? "online" : "offline"));
+                ToastDisplayer.displayToast(getApplicationContext(), contact.getFirstName() + " is now " + (contact.isOnline() ? "online" : "offline"));
             }
         });
     }

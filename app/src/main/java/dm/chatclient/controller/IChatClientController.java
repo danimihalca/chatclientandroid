@@ -16,7 +16,7 @@ public interface IChatClientController
 
     void requestContacts();
 
-    void setServerProperties(String address, int port);
+    void connect(String address, int port);
     void login(String userName, String password);
 
     void disconnect();

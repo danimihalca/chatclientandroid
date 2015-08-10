@@ -28,9 +28,9 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
     }
 
 
-    public void setServerProperties(String address, int port)
+    public void connect(String address, int port)
     {
-        setServerPropertiesNative(m_nativeChatClient, address, port);
+        connectNative(m_nativeChatClient, address, port);
     }
 
     public void login(String username, String password)
@@ -85,7 +85,7 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
 
     private native long createClientNative();
 
-    private native void setServerPropertiesNative(long clientAddress, String address, int port);
+    private native void connectNative(long clientAddress, String address, int port);
 
     private native void loginNative(long clientAddress, String username, String password);
 

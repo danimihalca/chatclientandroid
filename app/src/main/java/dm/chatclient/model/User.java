@@ -7,9 +7,9 @@ public class User extends BaseUser
 {
     private String m_password;
 
-    public User(int id, String userName, String password, String fullName)
+    public User(int id, String userName, String password, String firstName, String lastName)
     {
-        super(id, userName, fullName);
+        super(id, userName, firstName, lastName);
         m_password = password;
     }
 

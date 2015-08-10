@@ -1,8 +1,6 @@
 package dm.chatclient.utils;
 
-import android.app.Application;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dm.chatclient.R;
-import org.w3c.dom.Text;
 
 public class ContactListAdapter extends ArrayAdapter<Contact>
 {
@@ -60,7 +57,7 @@ public class ContactListAdapter extends ArrayAdapter<Contact>
         Contact contact = getItem(i);
 
         userNameView.setText(contact.getUserName());
-        fullNameView.setText(contact.getFullName());
+        fullNameView.setText(contact.getFirstName());
 
         int unreadMessagesCount = contact.getUnreadMessagesCount();
         String unreadCountText;

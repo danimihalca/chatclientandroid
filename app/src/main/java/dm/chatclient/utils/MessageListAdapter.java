@@ -5,10 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import dm.chatclient.R;
-import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 
 import java.util.ArrayList;
@@ -41,7 +39,7 @@ public class MessageListAdapter extends ArrayAdapter<Message>
 
         Message message = getItem(i);
 
-        senderView.setText(message.getSender().getFullName());
+        senderView.setText(message.getSender().getFirstName());
         messageView.setText(message.getMessageText());
 
         return view;

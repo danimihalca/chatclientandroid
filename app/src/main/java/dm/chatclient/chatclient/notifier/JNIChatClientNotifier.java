@@ -113,7 +113,7 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
             }
             while (c != 0);
             Log.d("Controller", "U:" + username);
-            String fullname="";
+            String firstname="";
             do
             {
                 c=bb.get(count++);
@@ -121,13 +121,25 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
                 {
                     break;
                 }
-                fullname += (char)c;
+                firstname += (char)c;
             }
             while (c != 0);
-            Log.d("Controller","F:"+fullname);
+            Log.d("Controller","F:"+firstname);
+            String lastname="";
+            do
+            {
+                c=bb.get(count++);
+                if (c==0)
+                {
+                    break;
+                }
+                lastname += (char)c;
+            }
+            while (c != 0);
+            Log.d("Controller","L:"+lastname);
 
             boolean isOnline = bb.get(count++) != 0;
-            Contact contact  = new Contact(id,username,fullname,isOnline);
+            Contact contact  = new Contact(id,username,firstname,lastname,isOnline);
             contactList.add(contact);
 
             notifyOnContactsReceived(contactList);

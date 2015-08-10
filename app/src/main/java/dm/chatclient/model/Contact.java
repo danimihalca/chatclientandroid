@@ -5,9 +5,9 @@ public class Contact extends BaseUser
     private boolean m_isOnline;
     private int m_unreadMessagesCount;
 
-    public Contact(int id, String userName, String fullName, boolean isOnline)
+    public Contact(int id, String userName, String firstName,String lastName, boolean isOnline)
     {
-        super(id, userName, fullName);
+        super(id, userName, firstName,lastName);
         this.m_isOnline = isOnline;
         this.m_unreadMessagesCount = 0;
     }

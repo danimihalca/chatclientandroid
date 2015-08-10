@@ -8,7 +8,7 @@ import dm.chatclient.model.Message;
  */
 public interface IChatClient
 {
-    void setServerProperties(String address, int port);
+    void connect(String address, int port);
 
     void login(String userName, String password);
 

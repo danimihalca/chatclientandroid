@@ -37,7 +37,7 @@ public class ChatClientController implements IChatClientController
         m_notifier = new JNIChatClientNotifier(this);
         m_chatClient.addListener(m_notifier);
 
-        m_user = new User(9999, "me", "pwd", "ME");
+        m_user = new User(9999, "me", "pwd", "ME", "");
 
     }
 
@@ -46,9 +46,9 @@ public class ChatClientController implements IChatClientController
         return m_user;
     }
 
-    public void setServerProperties(String address, int port)
+    public void connect(String address, int port)
     {
-        m_chatClient.setServerProperties(address, port);
+        m_chatClient.connect(address, port);
     }
 
     public void login(String username, String password)
@@ -125,155 +125,5 @@ public class ChatClientController implements IChatClientController
     {
         m_messageRepository.addMessage(message);
     }
-
-//    public void notifyOnMessage(int senderId,String message)
-//    {
-//        Contact sender = m_contacts.get(senderId);
-//        int unreadedMessages = sender.getUnreadMessagesCount();
-//        Message receivedMessage = new Message(sender,message);
-//        m_messages.get(sender).add(receivedMessage);
-//        boolean readingMessage = false;
-//        for(IChatClientListener listener: m_listeners)
-//        {
-//            if(listener.onNewMessage(receivedMessage))
-//            {
-//                readingMessage = true;
-//            }
-//        }
-//        if (readingMessage && unreadedMessages != 0)
-//        {
-//            Log.d("notifyOnMessage","reading");
-//            sender.setUnreadMessagesCount(0);
-//            notifyOnContactUpdated(sender);
-//            m_contacts.put(senderId,sender);
-//        }
-//        else if (!readingMessage)
-//        {
-//            Log.d("notifyOnMessage",Integer.toString(unreadedMessages+1));
-//            sender.setUnreadMessagesCount(++unreadedMessages);
-//            notifyOnContactUpdated(sender);
-//            m_contacts.put(senderId, sender);
-//        }
-//        Log.d("notifyOnMessage",m_contacts.toString());
-//    }
-//
-//    public void notifyOnConnected()
-//    {
-//        Log.d("notifyOnConnected",Integer.toString(m_listeners.size()));
-//        for(IChatClientListener listener: m_listeners)
-//        {
-//            listener.onConnected();
-//        }
-//    }
-//
-//    public void notifyOnDisconnected()
-//    {
-//        Log.d("notifyOnDisconnected",Integer.toString(m_listeners.size()));
-//        for(IChatClientListener listener: m_listeners)
-//        {
-//            listener.onDisconnected();
-//        }
-//        m_listeners.clear();
-//    }
-//    public void notifyOnContactUpdated(Contact contact)
-//    {
-//        for(IChatClientListener listener: m_listeners)
-//        {
-//            listener.onContactUpdated(contact);
-//        }
-//    }
-//    public void notifyOnLoginSuccessful()
-//    {
-//        Log.d("notifyOnLoginSuccessful",Integer.toString(m_listeners.size()));
-//        for(IChatClientListener listener: m_listeners)
-//        {
-//            listener.onLoginSuccessful();
-//        }
-//    }
-//
-//    public void notifyOnLoginFailed(String message)
-//    {
-//        Log.d("notifyOnLoginFailed",Integer.toString(m_listeners.size()));
-//        for(IChatClientListener listener: m_listeners)
-//        {
-//            listener.onLoginFailed(message);
-//        }
-//        m_listeners.clear();
-//    }
-//
-//    public void notifyOnConnectionError()
-//    {
-//        Log.d("notifyOnConnectionError",Integer.toString(m_listeners.size()));
-//        for(IChatClientListener listener: m_listeners)
-//        {
-//            listener.onConnectionError();
-//        }
-//        m_listeners.clear();
-//    }
-//
-//    public void notifyOnContactsReceived(byte[] contactsBuffer, int size)
-//    {
-//        ByteBuffer bb = ByteBuffer.wrap(contactsBuffer);
-//        bb.order(ByteOrder.LITTLE_ENDIAN);
-//        for (int i = 0; i<size; ++i)
-//        {
-//            Log.d("Controller","C:"+Byte.toString(bb.get(i)));
-//        }
-//        int count = 0;
-//        while (count < size)
-//        {
-//            int id = bb.getInt(count);
-//            Log.d("Controller","ID:"+Integer.toString(id));
-//
-//            count +=4;
-//
-//            byte c;
-//
-//            String username="";
-//            do
-//            {
-//                c=bb.get(count++);
-//                if (c==0)
-//                {
-//                    break;
-//                }
-//                username += (char)c;
-//            }
-//            while (c != 0);
-//            Log.d("Controller", "U:" + username);
-//            String fullname="";
-//            do
-//            {
-//                c=bb.get(count++);
-//                if (c==0)
-//                {
-//                    break;
-//                }
-//                fullname += (char)c;
-//            }
-//            while (c != 0);
-//            Log.d("Controller","F:"+fullname);
-//
-//            boolean isOnline = bb.get(count++) != 0;
-//            Contact contact  = new Contact(id,username,fullname,isOnline);
-//            m_contacts.put(id,contact);
-//            m_messages.put(contact, new ArrayList<Message>());
-//        }
-//
-//        for(IChatClientListener listener: m_listeners)
-//        {
-//            listener.onContactsReceived(new ArrayList<Contact>(m_contacts.values()));
-//        }
-//    }
-//    void notifyOnContactOnlineStatusChanged(int contactId, boolean isOnline)
-//    {
-//        Log.d("online changed",Integer.toString(contactId) +" "+Boolean.toString(isOnline));
-//        Contact c = m_contacts.get(contactId);
-//        c.setOnline(isOnline);
-//        for(IChatClientListener listener: m_listeners)
-//        {
-//            listener.onContactOnlineStatusChanged(c);
-//        }
-//    }
-
+    
 }

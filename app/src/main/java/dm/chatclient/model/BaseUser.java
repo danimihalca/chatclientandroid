@@ -7,13 +7,18 @@ public abstract class BaseUser
 {
     private int m_id;
     private String m_userName;
-    private String m_fullName;
+    private String m_firstName;
 
-    public BaseUser(int id, String userName, String fullName)
+
+
+    private String m_lastName;
+
+    public BaseUser(int id, String userName, String fullName, String lastName)
     {
         m_id = id;
         m_userName = userName;
-        m_fullName = fullName;
+        m_firstName = fullName;
+        m_lastName = lastName;
     }
 
     public int getId()
@@ -36,14 +41,24 @@ public abstract class BaseUser
         m_userName = userName;
     }
 
-    public String getFullName()
+    public String getFirstName()
     {
-        return m_fullName;
+        return m_firstName;
     }
 
-    public void setMFullName(String fullName)
+    public void setFirstName(String fullName)
     {
-        m_fullName = fullName;
+        m_firstName = fullName;
+    }
+
+    public String getLastName()
+    {
+        return m_lastName;
+    }
+
+    public void setLastName(String lastName)
+    {
+        this.m_lastName = lastName;
     }
 
     @Override

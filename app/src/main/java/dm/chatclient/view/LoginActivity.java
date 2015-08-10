@@ -47,6 +47,9 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
     @Override
     public void onConnected()
     {
+        String username = m_usernameInput.getText().toString();
+        String password = m_passwordInput.getText().toString();
+        m_controller.login(username, password);
     }
 
     @Override
@@ -108,14 +111,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
          @Override
          public void onClick(View view)
          {
-             String username = m_usernameInput.getText().toString();
-             String password = m_passwordInput.getText().toString();
 
              m_loginButton.setEnabled(false);
 
-             m_controller.setServerProperties("192.168.0.3", 9003);
+             m_controller.connect("192.168.0.3", 9003);
 
-             m_controller.login(username, password);
 
          }
      }
