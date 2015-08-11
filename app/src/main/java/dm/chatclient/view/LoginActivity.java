@@ -104,6 +104,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
              public void run()
              {
                  m_loginButton.setEnabled(true);
+//                 Log.d("onLoginFailed")
                  ToastDisplayer.displayToast(getApplicationContext(),"Connection error!");
              }
          });

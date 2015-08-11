@@ -13,8 +13,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/lastNameView"
-            android:layout_alignTop="@+id/onlineImageView" android:layout_toRightOf="@+id/firstNameView"
-            android:layout_toEndOf="@+id/firstNameView" android:layout_marginLeft="5dp"/>
+            android:layout_alignTop="@+id/firstNameView" android:layout_toRightOf="@+id/firstNameView"
+            android:layout_toEndOf="@+id/firstNameView"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

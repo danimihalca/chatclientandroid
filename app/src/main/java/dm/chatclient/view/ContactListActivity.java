@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -39,6 +40,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
         contactListAdapter = new ContactListAdapter(getApplicationContext());
         m_contactListView.setAdapter(contactListAdapter);
         m_contactListView.setOnItemClickListener(new ContactClickListener());
+        registerForContextMenu(m_contactListView);
 
         m_controller = ((ChatClientApplication) getApplication()).getController();
         m_controller.addRuntimeListener(this);
@@ -68,6 +70,15 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
             ToastDisplayer.displayToast(getApplicationContext(), "Press again to exit");
             m_close = true;
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        menu.add(0, 1, 0, "Add");
+        menu.add(0, 2, 1, "Rename");
+        menu.add(0, 3, 2, "Delete");
+        super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
