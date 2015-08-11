@@ -36,4 +36,5 @@ public interface IChatClientController
     void clearContacts();
 
     User getUser();
+    void setUser(User user);
 }

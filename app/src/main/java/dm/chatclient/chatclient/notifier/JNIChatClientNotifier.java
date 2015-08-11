@@ -5,6 +5,7 @@ import dm.chatclient.controller.IChatClientController;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 import dm.chatclient.model.User;
+import dm.chatclient.model.UserDetails;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -57,9 +58,9 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
         notifierProxy.setOnConnectedCallback("notifyOnConnected");
         notifierProxy.setOnDisconnectedCallback("notifyOnDisconnected");
         notifierProxy.setOnConnectionErrorCallback("notifyOnConnectionError");
-        notifierProxy.setOnLoginSuccessfulCallback("notifyOnLoginSuccessful");
         notifierProxy.setOnLoginFailedCallback("notifyOnLoginFailed");
 
+        notifierProxy.setOnLoginSuccessfulCallback("notifyOnLoginSuccessfulFromJNI");
         notifierProxy.setOnMessageReceivedCallback("notifyOnMessageReceivedFromJNI");
         notifierProxy.setOnContactsReceivedCallback("notifyOnContactsReceivedFromJNI");
         notifierProxy.setOnContactStatusChangedCallback("notifyOnContactOnlineStatusChangedFromJNI");
@@ -145,6 +146,53 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
             notifyOnContactsReceived(contactList);
         }
     }
+
+    public void notifyOnLoginSuccessfulFromJNI(byte[] userDetailsBuffer, int size)
+    {
+        ByteBuffer bb = ByteBuffer.wrap(userDetailsBuffer);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+
+
+        int count = 0;
+            int id = bb.getInt(count);
+            Log.d("Controller","ID:"+Integer.toString(id));
+
+            count +=4;
+
+            byte c;
+
+
+            String firstname="";
+            do
+            {
+                c=bb.get(count++);
+                if (c==0)
+                {
+                    break;
+                }
+                firstname += (char)c;
+            }
+            while (c != 0);
+            Log.d("Controller","F:"+firstname);
+
+            String lastname="";
+            do
+            {
+                c=bb.get(count++);
+                if (c==0)
+                {
+                    break;
+                }
+                lastname += (char)c;
+            }
+            while (c != 0);
+            Log.d("Controller","L:"+lastname);
+
+            UserDetails userDetails = new UserDetails(id,firstname,lastname);
+
+            notifyOnLoginSuccessful(userDetails);
+    }
+
 
     void notifyOnContactOnlineStatusChangedFromJNI(int contactId, byte state)
     {

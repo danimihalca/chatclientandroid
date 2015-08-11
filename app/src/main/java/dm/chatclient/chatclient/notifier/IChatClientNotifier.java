@@ -4,6 +4,7 @@ import dm.chatclient.chatclient.listener.ILoginListener;
 import dm.chatclient.chatclient.listener.IRuntimeListener;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
+import dm.chatclient.model.UserDetails;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface IChatClientNotifier
     void notifyOnConnected();
     void notifyOnDisconnected();
     void notifyOnConnectionError();
-    void notifyOnLoginSuccessful();
+    void notifyOnLoginSuccessful(UserDetails userDetails);
     void notifyOnLoginFailed(String reason);
     void notifyOnContactsReceived(List<Contact> contacts);
     void notifyOnContactStatusChanged(Contact contact);

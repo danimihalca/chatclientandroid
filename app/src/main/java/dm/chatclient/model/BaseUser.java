@@ -8,9 +8,6 @@ public abstract class BaseUser
     private int m_id;
     private String m_userName;
     private String m_firstName;
-
-
-
     private String m_lastName;
 
     public BaseUser(int id, String userName, String fullName, String lastName)

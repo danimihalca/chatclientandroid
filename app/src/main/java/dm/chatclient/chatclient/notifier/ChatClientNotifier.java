@@ -5,6 +5,7 @@ import dm.chatclient.chatclient.listener.IRuntimeListener;
 import dm.chatclient.controller.IChatClientController;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
+import dm.chatclient.model.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,11 +75,11 @@ public class ChatClientNotifier implements IChatClientNotifier
         }
     }
 
-    public void notifyOnLoginSuccessful()
+    public void notifyOnLoginSuccessful(UserDetails userDetails)
     {
         if (m_loginListener != null)
         {
-            m_loginListener.onLoginSuccessful();
+            m_loginListener.onLoginSuccessful(userDetails);
         }
     }
 

@@ -37,13 +37,17 @@ public class ChatClientController implements IChatClientController
         m_notifier = new JNIChatClientNotifier(this);
         m_chatClient.addListener(m_notifier);
 
-        m_user = new User(9999, "me", "pwd", "ME", "");
-
     }
 
     public User getUser()
     {
         return m_user;
+    }
+
+    @Override
+    public void setUser(User user)
+    {
+        m_user =user;
     }
 
     public void connect(String address, int port)

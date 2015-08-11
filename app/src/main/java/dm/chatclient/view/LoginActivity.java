@@ -12,6 +12,8 @@ import dm.chatclient.chatclient.listener.ILoginListener;
 import dm.chatclient.controller.IChatClientController;
 
 import dm.chatclient.ChatClientApplication;
+import dm.chatclient.model.User;
+import dm.chatclient.model.UserDetails;
 import dm.chatclient.utils.ToastDisplayer;
 
 
@@ -19,8 +21,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
 {
     private IChatClientController m_controller;
 
-    private EditText m_usernameInput;
-    private EditText m_passwordInput;
+    private String m_userName;
+    private String m_password;
 
     Button m_loginButton;
 
@@ -33,8 +35,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
         m_controller = ((ChatClientApplication) getApplication()).getController();
         m_controller.setLoginListener(LoginActivity.this);
 
-        m_usernameInput = (EditText) findViewById(R.id.usernameInput);
-        m_passwordInput = (EditText) findViewById(R.id.passwordInput);
 
         m_loginButton =(Button) findViewById(R.id.loginButton);
         m_loginButton.setOnClickListener(new LoginButtonListener());
@@ -47,9 +47,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
     @Override
     public void onConnected()
     {
-        String username = m_usernameInput.getText().toString();
-        String password = m_passwordInput.getText().toString();
-        m_controller.login(username, password);
+
+        m_userName = ((EditText) findViewById(R.id.usernameInput)).getText().toString();
+        m_password = ((EditText) findViewById(R.id.passwordInput)).getText().toString();
+        m_controller.login(m_userName, m_password);
     }
 
     @Override
@@ -66,8 +67,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
     }
 
     @Override
-    public void onLoginSuccessful()
+    public void onLoginSuccessful(UserDetails userDetails)
     {
+        User user = new User(userDetails.getId(),m_userName,m_password,userDetails.getFirstName(),userDetails.getLastName());
+        m_controller.setUser(user);
+
         this.runOnUiThread(new Runnable()
         {
             public void run()
