@@ -1,17 +1,21 @@
 package dm.chatclient.model;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class Message
 {
     private BaseUser m_sender;
     private BaseUser m_receiver;
     private String m_messageText;
-
+    private Date m_date;
 
     public Message(BaseUser sender, BaseUser receiver, String message)
     {
         m_sender = sender;
         m_receiver = receiver;
         m_messageText = message;
+        m_date = Calendar.getInstance().getTime();
     }
 
     public String getMessageText()
@@ -42,5 +46,10 @@ public class Message
     public void setReceiver(BaseUser receiver)
     {
         m_receiver = receiver;
+    }
+
+    public Date getDate()
+    {
+        return  m_date;
     }
 }

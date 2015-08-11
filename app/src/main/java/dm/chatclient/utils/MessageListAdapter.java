@@ -9,11 +9,14 @@ import android.widget.TextView;
 import dm.chatclient.R;
 import dm.chatclient.model.Message;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageListAdapter extends ArrayAdapter<Message>
 {
+    public static SimpleDateFormat detailDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
     public MessageListAdapter(Context context)
     {
         super(context, 0, new ArrayList<Message>());
@@ -33,14 +36,17 @@ public class MessageListAdapter extends ArrayAdapter<Message>
             view = LayoutInflater.from(getContext()).inflate(R.layout.message_layout,viewGroup,false);
         }
 
-        TextView senderView = (TextView) view.findViewById(R.id.senderFullNameView);
+        TextView senderFirstNameView = (TextView) view.findViewById(R.id.senderFirstNameView);
+        TextView senderLastNameView = (TextView) view.findViewById(R.id.senderLastNameView);
         TextView messageView = (TextView) view.findViewById(R.id.messageView);
-//        TextView dateView = (TextView) view.findViewById(R.id.dateView);
+        TextView dateView = (TextView) view.findViewById(R.id.dateView);
 
         Message message = getItem(i);
 
-        senderView.setText(message.getSender().getFirstName());
+        senderFirstNameView.setText(message.getSender().getFirstName());
+        senderLastNameView.setText(message.getSender().getLastName());
         messageView.setText(message.getMessageText());
+        dateView.setText(detailDateFormat.format(message.getDate()));
 
         return view;
     }

@@ -51,13 +51,15 @@ public class ContactListAdapter extends ArrayAdapter<Contact>
         }
 
         TextView userNameView = (TextView) view.findViewById(R.id.userNameView);
-        TextView fullNameView = (TextView) view.findViewById(R.id.fullNameView);
+        TextView firstlNameView = (TextView) view.findViewById(R.id.firstNameView);
+        TextView lastNameView = (TextView) view.findViewById(R.id.lastNameView);
         ImageView onlineImageView = (ImageView) view.findViewById(R.id.onlineImageView);
         TextView unreadMessagesCountView = (TextView) view.findViewById(R.id.unreadMessagesCountView);
         Contact contact = getItem(i);
 
         userNameView.setText(contact.getUserName());
-        fullNameView.setText(contact.getFirstName());
+        firstlNameView.setText(contact.getFirstName());
+        lastNameView.setText(contact.getLastName());
 
         int unreadMessagesCount = contact.getUnreadMessagesCount();
         String unreadCountText;

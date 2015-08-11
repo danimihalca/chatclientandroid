@@ -7,25 +7,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/fullNameView" android:layout_margin="5dp"/>
+            android:id="@+id/firstNameView" android:layout_margin="5dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/lastNameView"
+            android:layout_alignTop="@+id/onlineImageView" android:layout_toRightOf="@+id/firstNameView"
+            android:layout_toEndOf="@+id/firstNameView" android:layout_marginLeft="5dp"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/userNameView"
-            android:layout_below="@+id/fullNameView" android:layout_alignRight="@+id/fullNameView"
-            android:layout_alignEnd="@+id/fullNameView" android:layout_margin="5dp"/>
+            android:layout_below="@+id/firstNameView" android:layout_alignRight="@+id/firstNameView"
+            android:layout_alignEnd="@+id/firstNameView" android:layout_margin="5dp"/>
     <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:id="@+id/onlineImageView"
             android:scaleType="fitXY"
-            android:layout_alignBottom="@+id/fullNameView" android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/firstNameView" android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" android:layout_margin="5dp"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/unreadMessagesCountView" android:layout_below="@+id/onlineImageView"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
+            android:id="@+id/unreadMessagesCountView"
+            android:layout_below="@+id/onlineImageView" android:layout_alignRight="@+id/onlineImageView"
+            android:layout_alignEnd="@+id/onlineImageView"/>
 </RelativeLayout>
