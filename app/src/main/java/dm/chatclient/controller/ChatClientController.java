@@ -125,5 +125,5 @@ public class ChatClientController implements IChatClientController
     {
         m_messageRepository.addMessage(message);
     }
-    
+
 }

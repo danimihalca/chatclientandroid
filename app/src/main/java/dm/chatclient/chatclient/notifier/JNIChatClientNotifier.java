@@ -138,18 +138,18 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
             while (c != 0);
             Log.d("Controller","L:"+lastname);
 
-            boolean isOnline = bb.get(count++) != 0;
-            Contact contact  = new Contact(id,username,firstname,lastname,isOnline);
+            byte state = bb.get(count++);
+            Contact contact  = new Contact(id,username,firstname,lastname,Contact.CONTACT_STATE.convert(state));
             contactList.add(contact);
 
             notifyOnContactsReceived(contactList);
         }
     }
 
-    void notifyOnContactOnlineStatusChangedFromJNI(int contactId, boolean isOnline)
+    void notifyOnContactOnlineStatusChangedFromJNI(int contactId, byte state)
     {
         Contact contact = m_controller.getContact(contactId);
-        contact.setOnline(isOnline);
+        contact.setState(Contact.CONTACT_STATE.convert(state));
 
         notifyOnContactStatusChanged(contact);
     }

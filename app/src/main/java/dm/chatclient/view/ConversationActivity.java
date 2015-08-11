@@ -125,7 +125,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
             @Override
             public void run()
             {
-                ToastDisplayer.displayToast(getApplicationContext(), contact.getFirstName() + " is now " + (contact.isOnline() ? "online" : "offline"));
+                ToastDisplayer.displayToast(getApplicationContext(), contact.getFirstName() + " is now " + contact.getState().toString());
             }
         });
     }

@@ -2,24 +2,43 @@ package dm.chatclient.model;
 
 public class Contact extends BaseUser
 {
-    private boolean m_isOnline;
+    public enum CONTACT_STATE
+    {
+        OFFLINE,
+        ONLINE;
+
+        public static CONTACT_STATE convert(byte ordinal)
+        {
+            switch (ordinal)
+            {
+                case 0:
+                    return OFFLINE;
+                case 1:
+                    return ONLINE;
+            }
+            return  OFFLINE;
+        }
+    }
+
+
+    private CONTACT_STATE m_state;
     private int m_unreadMessagesCount;
 
-    public Contact(int id, String userName, String firstName,String lastName, boolean isOnline)
+    public Contact(int id, String userName, String firstName,String lastName, CONTACT_STATE state)
     {
         super(id, userName, firstName,lastName);
-        this.m_isOnline = isOnline;
+        this.m_state = state;
         this.m_unreadMessagesCount = 0;
     }
 
-    public boolean isOnline()
+    public CONTACT_STATE getState()
     {
-        return m_isOnline;
+        return m_state;
     }
 
-    public void setOnline(boolean m_isOnline)
+    public void setState(CONTACT_STATE state)
     {
-        this.m_isOnline = m_isOnline;
+        this.m_state = state;
     }
 
     public int getUnreadMessagesCount()

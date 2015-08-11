@@ -71,13 +71,18 @@ public class ContactListAdapter extends ArrayAdapter<Contact>
         }
         unreadMessagesCountView.setText(unreadCountText);
 
-        if (contact.isOnline())
+
+        switch (contact.getState())
         {
-            onlineImageView.setImageDrawable(m_onlineDrawable);
-        }
-        else
-        {
-            onlineImageView.setImageDrawable(m_offlineDrawable);
+            case ONLINE:
+            {
+                onlineImageView.setImageDrawable(m_onlineDrawable);
+                break;
+            }
+            case OFFLINE:
+            {
+                onlineImageView.setImageDrawable(m_offlineDrawable);
+            }
         }
 
         return view;
