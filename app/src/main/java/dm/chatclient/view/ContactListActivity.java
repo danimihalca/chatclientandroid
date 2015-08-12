@@ -93,6 +93,24 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
         });
     }
 
+    @Override
+    public void onRemovedByContact(Contact contact)
+    {
+
+    }
+
+    @Override
+    public void onAddContactResponse(String userName, boolean accepted)
+    {
+
+    }
+
+    @Override
+    public boolean onAddingByContact(String requester)
+    {
+        return false;
+    }
+
 
     @Override
     public void onDisconnected()

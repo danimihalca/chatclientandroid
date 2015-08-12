@@ -127,4 +127,43 @@ public class ChatClientNotifier implements IChatClientNotifier
             listener.onMessageReceived(message);
         }
     }
+
+    @Override
+    public void notifyOnRemovedByContact(int contactId)
+    {
+        Contact contact = m_controller.getContact(contactId);
+        List<IRuntimeListener> reverseList =(List<IRuntimeListener>) ((ArrayList<IRuntimeListener>)m_runtimeListeners).clone();
+        Collections.reverse(reverseList);
+        for(IRuntimeListener listener : reverseList)
+        {
+            listener.onRemovedByContact(contact);
+        }
+    }
+
+    @Override
+    public void notifyOnAddContactResponse(String userName, boolean accepted)
+    {
+        List<IRuntimeListener> reverseList =(List<IRuntimeListener>) ((ArrayList<IRuntimeListener>)m_runtimeListeners).clone();
+        Collections.reverse(reverseList);
+        for(IRuntimeListener listener : reverseList)
+        {
+            listener.onAddContactResponse(userName, accepted);
+        }
+    }
+
+    @Override
+    public boolean notifyOnAddingByContact(String requester)
+    {
+        List<IRuntimeListener> reverseList =(List<IRuntimeListener>) ((ArrayList<IRuntimeListener>)m_runtimeListeners).clone();
+        Collections.reverse(reverseList);
+        for(IRuntimeListener listener : reverseList)
+        {
+            boolean accepted = listener.onAddingByContact(requester);
+            if (accepted)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

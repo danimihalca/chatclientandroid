@@ -11,4 +11,8 @@ public interface IRuntimeListener extends IBaseListener
     void onContactsReceived();
     void onContactStatusChanged(Contact contact);
     void onMessageReceived(Message message);
+
+    void onRemovedByContact(Contact contact);
+    void onAddContactResponse(String userName, boolean accepted);
+    boolean onAddingByContact(String requester);
 }

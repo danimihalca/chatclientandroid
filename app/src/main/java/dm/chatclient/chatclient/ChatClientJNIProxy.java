@@ -62,6 +62,19 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
 
     }
 
+    @Override
+    public void addContact(String userName)
+    {
+        addContactNative(m_nativeChatClient, userName);
+    }
+
+    @Override
+    public void removeContact(int contactId)
+    {
+        removeContactNative(m_nativeChatClient, contactId);
+    }
+
+
 
     public void requestContacts()
     {
@@ -101,4 +114,6 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
 
     private native void removeListenerNative(long clientAddress, long listener);
 
+    private native void addContactNative(long m_nativeChatClient, String userName);
+    private native void removeContactNative(long m_nativeChatClient, int contactId);
 }

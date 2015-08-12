@@ -1,6 +1,5 @@
 package dm.chatclient.controller;
 
-import android.util.Log;
 import dm.chatclient.chatclient.ChatClientJNIProxy;
 import dm.chatclient.chatclient.IChatClient;
 import dm.chatclient.chatclient.listener.ILoginListener;
@@ -15,10 +14,6 @@ import dm.chatclient.repository.contact.InMemoryContactRepository;
 import dm.chatclient.repository.message.IMessageRepository;
 import dm.chatclient.repository.message.InMemoryMessageRepository;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.*;
 
 public class ChatClientController implements IChatClientController
@@ -48,6 +43,18 @@ public class ChatClientController implements IChatClientController
     public void setUser(User user)
     {
         m_user =user;
+    }
+
+    @Override
+    public void addContact(String userName)
+    {
+        m_chatClient.addContact(userName);
+    }
+
+    @Override
+    public void removeContact(Contact contact)
+    {
+        m_chatClient.removeContact(contact.getId());
     }
 
     public void connect(String address, int port)

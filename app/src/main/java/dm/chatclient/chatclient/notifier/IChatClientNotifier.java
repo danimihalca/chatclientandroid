@@ -25,4 +25,9 @@ public interface IChatClientNotifier
     void notifyOnContactsReceived(List<Contact> contacts);
     void notifyOnContactStatusChanged(Contact contact);
     void notifyOnMessageReceived(Message message);
+
+
+    void notifyOnRemovedByContact(int contactId);
+    void notifyOnAddContactResponse(String userName, boolean accepted);
+    boolean notifyOnAddingByContact(String requester);
 }

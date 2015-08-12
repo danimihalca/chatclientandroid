@@ -17,7 +17,11 @@ public class JNIChatClientNotifierProxy implements Closeable
         ON_LOGIN_FAILED,
         ON_CONTACT_STATUS_CHANGED,
         ON_MESSAGE_RECEIVED,
-        ON_CONTACTS_RECEIVED
+        ON_CONTACTS_RECEIVED,
+
+        ON_REMOVED_BY_CONTACT,
+        ON_ADD_CONTACT_RESPONSE,
+        ON_ADDING_BY_CONTACT
     }
 
     private long m_nativeNotifierProxy;
@@ -70,6 +74,20 @@ public class JNIChatClientNotifierProxy implements Closeable
     public void setOnContactsReceivedCallback(String methodName)
     {
         setCallbackMethod(CALLBACK_METHOD.ON_CONTACTS_RECEIVED, methodName);
+    }
+
+    public void setOnRemovedByContactCallback(String methodName)
+    {
+        setCallbackMethod(CALLBACK_METHOD.ON_REMOVED_BY_CONTACT, methodName);
+    }
+
+    public void setOnAddContactResponseCallback(String methodName)
+    {
+        setCallbackMethod(CALLBACK_METHOD.ON_ADD_CONTACT_RESPONSE, methodName);
+    }
+    public void setOnAddingByContactCallback(String methodName)
+    {
+        setCallbackMethod(CALLBACK_METHOD.ON_ADDING_BY_CONTACT, methodName);
     }
 
     @Override

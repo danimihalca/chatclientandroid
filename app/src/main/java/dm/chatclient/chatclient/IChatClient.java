@@ -1,6 +1,7 @@
 package dm.chatclient.chatclient;
 
 import dm.chatclient.chatclient.notifier.IChatClientNotifier;
+import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 
 /**
@@ -20,5 +21,6 @@ public interface IChatClient
     void addListener(IChatClientNotifier m_notifier);
 
     void removeListener(IChatClientNotifier m_notifier);
-
+    void addContact(String userName);
+    void removeContact(int contactId);
 }

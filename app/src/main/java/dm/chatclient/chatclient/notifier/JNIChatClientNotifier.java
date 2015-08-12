@@ -64,6 +64,10 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
         notifierProxy.setOnMessageReceivedCallback("notifyOnMessageReceivedFromJNI");
         notifierProxy.setOnContactsReceivedCallback("notifyOnContactsReceivedFromJNI");
         notifierProxy.setOnContactStatusChangedCallback("notifyOnContactOnlineStatusChangedFromJNI");
+
+        notifierProxy.setOnRemovedByContactCallback("notifyOnRemovedByContact");
+        notifierProxy.setOnAddContactResponseCallback("notifyOnAddContactResponse");
+        notifierProxy.setOnAddingByContactCallback("notifyOnAddingByContact");
     }
 
 
