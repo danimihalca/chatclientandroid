@@ -107,7 +107,17 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
     @Override
     public void onRemovedByContact(Contact contact)
     {
-
+        if (contact.getId() == m_contact.getId())
+        {
+            this.runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    finish();
+                }
+            });
+        }
     }
 
     @Override

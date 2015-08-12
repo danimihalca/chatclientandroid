@@ -52,9 +52,14 @@ public class ChatClientController implements IChatClientController
     }
 
     @Override
-    public void removeContact(Contact contact)
+    public void removeContact(Contact contact, boolean notifyServer)
     {
-        m_chatClient.removeContact(contact.getId());
+        if (notifyServer)
+        {
+            m_chatClient.removeContact(contact.getId());
+        }
+        m_contactRepository.deleteContact(contact);
+        m_messageRepository.removeMessages(contact);
     }
 
     public void connect(String address, int port)

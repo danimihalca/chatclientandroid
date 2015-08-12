@@ -15,6 +15,6 @@ public interface IContactRepository
     List<Contact> getContacts();
     void setContacts(List<Contact> contacts);
     Contact getContact(int contactId);
-
+    void deleteContact(Contact contact);
     void clearContacts();
 }

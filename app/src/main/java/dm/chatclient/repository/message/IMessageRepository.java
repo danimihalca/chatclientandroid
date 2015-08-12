@@ -12,6 +12,6 @@ public interface IMessageRepository
 {
     void addMessage(Message message);
     List<Message> getMessagesWithContact(Contact c);
-
+    void removeMessages(Contact contact);
     void clearMessages();
 }

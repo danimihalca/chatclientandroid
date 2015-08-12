@@ -21,7 +21,17 @@ public class InMemoryContactRepository implements IContactRepository
 
     public void addContact(Contact c)
     {
-        m_contacts.put(c.getId(), c);
+        Contact existingContact = m_contacts.get(c.getId());
+        if (existingContact == null)
+        {
+            m_contacts.put(c.getId(), c);
+        }
+        else
+        {
+            existingContact.setFirstName(c.getFirstName());
+            existingContact.setLastName(c.getLastName());
+            existingContact.setUserName(c.getUserName());
+        }
     }
 
     public void addContacts(List<Contact> contacts)
@@ -40,6 +50,12 @@ public class InMemoryContactRepository implements IContactRepository
     public Contact getContact(int contactId)
     {
         return m_contacts.get(contactId);
+    }
+
+    @Override
+    public void deleteContact(Contact contact)
+    {
+        m_contacts.remove(contact.getId());
     }
 
 

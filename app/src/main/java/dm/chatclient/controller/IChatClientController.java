@@ -39,5 +39,5 @@ public interface IChatClientController
     void setUser(User user);
 
     void addContact(String userName);
-    void removeContact(Contact contact);
+    void removeContact(Contact contact, boolean notifyServer);
 }

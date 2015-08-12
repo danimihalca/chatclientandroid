@@ -53,6 +53,12 @@ public class InMemoryMessageRepository implements IMessageRepository
         }
     }
 
+    @Override
+    public void removeMessages(Contact contact)
+    {
+        m_messages.remove(contact);
+    }
+
 
     public void clearMessages()
     {

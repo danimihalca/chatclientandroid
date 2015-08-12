@@ -6,9 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import dm.chatclient.ChatClientApplication;
 import dm.chatclient.R;
 import dm.chatclient.chatclient.listener.IRuntimeListener;
@@ -25,6 +27,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     private IChatClientController m_controller;
     private boolean m_close;
 
+//    private List<Contact> m_contacts;
     private ListView m_contactListView;
     ContactListAdapter contactListAdapter;
 
@@ -75,10 +78,26 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-        menu.add(0, 1, 0, "Add");
-        menu.add(0, 2, 1, "Rename");
-        menu.add(0, 3, 2, "Delete");
+//        menu.add(0, 3, 2, "Delete");
+        menu.add("Delete");
         super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Contact contact = contactListAdapter.getItem(info.position);
+        if (item.getTitle() == "Delete")
+        {
+            Log.d("Delete", contact.getUserName());
+            m_controller.removeContact(contact, true);
+            ToastDisplayer.displayToast(getApplicationContext(), contact.getUserName() + " has been removed from contacts");
+            contactListAdapter.remove(contact);
+            contactListAdapter.notifyDataSetChanged();
+//            contactListAdapter.remove();
+        }
+        return true;
     }
 
     @Override
@@ -94,9 +113,19 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     }
 
     @Override
-    public void onRemovedByContact(Contact contact)
+    public void onRemovedByContact(final Contact contact)
     {
-
+        Log.d("onRemovedByContact", contact.getUserName());
+        m_controller.removeContact(contact, true);
+        this.runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                ToastDisplayer.displayToast(getApplicationContext(),contact.getUserName() + " removed you from his contacts");
+                contactListAdapter.remove(contact);
+                contactListAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -123,13 +152,12 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     @Override
     public void onContactsReceived()
     {
-       final List<Contact> contactList = m_controller.getContacts();
-       Log.d("OnContactsReceived", contactList.toString());
+       Log.d("OnContactsReceived", "");
        this.runOnUiThread(new Runnable()
        {
            public void run()
            {
-               contactListAdapter.setContactList(contactList);
+               contactListAdapter.setContactList( m_controller.getContacts());
                contactListAdapter.notifyDataSetChanged();
            }
        });
