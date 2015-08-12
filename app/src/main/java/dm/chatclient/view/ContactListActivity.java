@@ -9,8 +9,8 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 import dm.chatclient.ChatClientApplication;
 import dm.chatclient.R;
 import dm.chatclient.chatclient.listener.IRuntimeListener;
@@ -20,13 +20,11 @@ import dm.chatclient.model.Message;
 import dm.chatclient.utils.ContactListAdapter;
 import dm.chatclient.utils.ToastDisplayer;
 
-import java.util.List;
-
 public class ContactListActivity extends AppCompatActivity implements IRuntimeListener
 {
     private IChatClientController m_controller;
     private boolean m_close;
-
+    private boolean m_isVisible;
 //    private List<Contact> m_contacts;
     private ListView m_contactListView;
     ContactListAdapter contactListAdapter;
@@ -49,13 +47,35 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
         m_controller.addRuntimeListener(this);
         m_controller.requestContacts();
 
+        m_isVisible =true;
         m_close = false;
+
+        Button addButton = (Button) findViewById(R.id.addContactButton);
+        addButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                AddContactDialogFragment d = new AddContactDialogFragment();
+                String tag ="ADD";
+                d.show(getSupportFragmentManager(),tag);
+            }
+        });
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        m_isVisible = false;
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
+        m_isVisible = true;
+        m_close = false;
         contactListAdapter.notifyDataSetChanged();
     }
 
@@ -121,7 +141,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
         {
             public void run()
             {
-                ToastDisplayer.displayToast(getApplicationContext(),contact.getUserName() + " removed you from his contacts");
+                ToastDisplayer.displayToast(getApplicationContext(), contact.getUserName() + " removed you from his contacts");
                 contactListAdapter.remove(contact);
                 contactListAdapter.notifyDataSetChanged();
             }
@@ -129,14 +149,53 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     }
 
     @Override
-    public void onAddContactResponse(String userName, boolean accepted)
+    public void onAddContactResponse(final String userName, final boolean accepted)
     {
-
+        Log.d("onAddContactResponse",userName + " "+ Boolean.toString(accepted));
+        this.runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                ToastDisplayer.displayToast(getApplicationContext(), userName + " has " + (accepted ? "accepted" : "declined")
+                        + " your request");
+            }
+        });
     }
 
     @Override
     public boolean onAddingByContact(String requester)
     {
+        if (m_isVisible)
+        {
+            final AddContactRequestDialogFragment requestFragment = new AddContactRequestDialogFragment();
+            Bundle args = new Bundle();
+            args.putString("userName", requester);
+            requestFragment.setArguments(args);
+            Log.d("onAddingByContact",requester);
+
+            if (m_isVisible)
+            {
+                this.runOnUiThread(new Runnable()
+                {
+                    public void run()
+                    {
+                        requestFragment.show(getSupportFragmentManager(),"req");
+                    }
+                });
+            }
+            while (!requestFragment.isDecided())
+            {
+                try
+                {
+                    Thread.sleep(100);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return requestFragment.isAccepted();
+        }
+
         return false;
     }
 
@@ -157,7 +216,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
        {
            public void run()
            {
-               contactListAdapter.setContactList( m_controller.getContacts());
+               contactListAdapter.setContactList(m_controller.getContacts());
                contactListAdapter.notifyDataSetChanged();
            }
        });
@@ -175,6 +234,12 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
        });
     }
 
+    public void addContact(String userName)
+    {
+        Log.d("addContact",userName);
+        m_controller.addContact(userName);
+    }
+
 
     class ContactClickListener implements ListView.OnItemClickListener
     {
@@ -189,5 +254,6 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
            intent.putExtra("ContactId", c.getId());
            startActivity(intent);
        }
+
     }
 }

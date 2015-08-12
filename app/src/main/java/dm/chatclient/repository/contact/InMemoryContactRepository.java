@@ -66,7 +66,7 @@ public class InMemoryContactRepository implements IContactRepository
 
     public void setContacts(List<Contact> contacts)
     {
-        clearContacts();
+//        clearContacts();
         addContacts(contacts);
     }
 }

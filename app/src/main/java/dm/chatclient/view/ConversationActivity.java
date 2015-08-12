@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +31,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
     private EditText m_messageInput;
 
     private MessageListAdapter m_messageListAdapter;
-
+    private boolean m_isVisible;
 
 
     @Override
@@ -60,6 +61,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
         m_messageListAdapter = new MessageListAdapter(getApplicationContext(),receivedMessages);
         m_messageListView.setAdapter(m_messageListAdapter);
 
+        m_isVisible =true;
     }
 
     @Override
@@ -129,8 +131,38 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
     @Override
     public boolean onAddingByContact(String requester)
     {
-        return false;
-    }
+        if (m_isVisible)
+        {
+            final AddContactRequestDialogFragment requestFragment = new AddContactRequestDialogFragment();
+            Bundle args = new Bundle();
+            args.putString("userName", requester);
+            requestFragment.setArguments(args);
+            Log.d("onAddingByContact", requester);
+
+            if (m_isVisible)
+            {
+                this.runOnUiThread(new Runnable()
+                {
+                    public void run()
+                    {
+                        requestFragment.show(getSupportFragmentManager(),"req");
+                    }
+                });
+            }
+            while (!requestFragment.isDecided())
+            {
+                try
+                {
+                    Thread.sleep(100);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return requestFragment.isAccepted();
+        }
+
+        return false;    }
 
 
     @Override
