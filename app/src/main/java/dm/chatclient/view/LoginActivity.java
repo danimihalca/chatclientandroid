@@ -9,6 +9,7 @@ import android.widget.EditText;
 import dm.chatclient.R;
 
 import dm.chatclient.chatclient.listener.ILoginListener;
+import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.controller.IChatClientController;
 
 import dm.chatclient.ChatClientApplication;
@@ -84,14 +85,14 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
     }
 
     @Override
-    public void onLoginFailed(final String message)
+    public void onLoginFailed(final IChatClientNotifier.AUTHENTICATION_STATUS reason)
     {
         this.runOnUiThread(new Runnable()
         {
             public void run()
             {
                 m_loginButton.setEnabled(true);
-                ToastDisplayer.displayToast(getApplicationContext(), "Login failed: " + message);
+                ToastDisplayer.displayToast(getApplicationContext(), "Login failed: " + reason.toString());
             }
         });
     }

@@ -5,6 +5,24 @@ package dm.chatclient.model;
  */
 public abstract class BaseUser
 {
+    public enum USER_STATE
+    {
+        OFFLINE,
+        ONLINE;
+
+        public static USER_STATE convert(byte ordinal)
+        {
+            switch (ordinal)
+            {
+                case 0:
+                    return OFFLINE;
+                case 1:
+                    return ONLINE;
+            }
+            return  OFFLINE;
+        }
+    }
+
     private int m_id;
     private String m_userName;
     private String m_firstName;

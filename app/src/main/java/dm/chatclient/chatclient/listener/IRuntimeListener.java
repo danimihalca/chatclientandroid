@@ -1,5 +1,6 @@
 package dm.chatclient.chatclient.listener;
 
+import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 
@@ -13,6 +14,6 @@ public interface IRuntimeListener extends IBaseListener
     void onMessageReceived(Message message);
 
     void onRemovedByContact(Contact contact);
-    void onAddContactResponse(String userName, boolean accepted);
+    void onAddContactResponse(String userName,  IChatClientNotifier.ADD_REQUEST_STATUS status);
     boolean onAddingByContact(String requester);
 }

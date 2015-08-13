@@ -12,6 +12,7 @@ import android.widget.ListView;
 import dm.chatclient.ChatClientApplication;
 import dm.chatclient.R;
 import dm.chatclient.chatclient.listener.IRuntimeListener;
+import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.controller.IChatClientController;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
@@ -123,7 +124,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
     }
 
     @Override
-    public void onAddContactResponse(String userName, boolean accepted)
+    public void onAddContactResponse(String userName, IChatClientNotifier.ADD_REQUEST_STATUS status)
     {
 
     }

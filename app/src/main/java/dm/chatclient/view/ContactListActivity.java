@@ -14,6 +14,7 @@ import android.widget.ListView;
 import dm.chatclient.ChatClientApplication;
 import dm.chatclient.R;
 import dm.chatclient.chatclient.listener.IRuntimeListener;
+import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.controller.IChatClientController;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
@@ -149,15 +150,14 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     }
 
     @Override
-    public void onAddContactResponse(final String userName, final boolean accepted)
+    public void onAddContactResponse(final String userName, final IChatClientNotifier.ADD_REQUEST_STATUS status)
     {
-        Log.d("onAddContactResponse",userName + " "+ Boolean.toString(accepted));
+        Log.d("onAddContactResponse",userName + " "+ status.toString());
         this.runOnUiThread(new Runnable()
         {
             public void run()
             {
-                ToastDisplayer.displayToast(getApplicationContext(), userName + " has " + (accepted ? "accepted" : "declined")
-                        + " your request");
+                ToastDisplayer.displayToast(getApplicationContext(), userName + ":"+status.toString());
             }
         });
     }

@@ -2,10 +2,7 @@ package dm.chatclient.chatclient.notifier;
 
 import android.util.Log;
 import dm.chatclient.controller.IChatClientController;
-import dm.chatclient.model.Contact;
-import dm.chatclient.model.Message;
-import dm.chatclient.model.User;
-import dm.chatclient.model.UserDetails;
+import dm.chatclient.model.*;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -58,15 +55,15 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
         notifierProxy.setOnConnectedCallback("notifyOnConnected");
         notifierProxy.setOnDisconnectedCallback("notifyOnDisconnected");
         notifierProxy.setOnConnectionErrorCallback("notifyOnConnectionError");
-        notifierProxy.setOnLoginFailedCallback("notifyOnLoginFailed");
 
+        notifierProxy.setOnLoginFailedCallback("notifyOnLoginFailedFromJnNI");
         notifierProxy.setOnLoginSuccessfulCallback("notifyOnLoginSuccessfulFromJNI");
         notifierProxy.setOnMessageReceivedCallback("notifyOnMessageReceivedFromJNI");
         notifierProxy.setOnContactsReceivedCallback("notifyOnContactsReceivedFromJNI");
         notifierProxy.setOnContactStatusChangedCallback("notifyOnContactOnlineStatusChangedFromJNI");
 
         notifierProxy.setOnRemovedByContactCallback("notifyOnRemovedByContact");
-        notifierProxy.setOnAddContactResponseCallback("notifyOnAddContactResponse");
+        notifierProxy.setOnAddContactResponseCallback("notifyOnAddContactResponseFromJNI");
         notifierProxy.setOnAddingByContactCallback("notifyOnAddingByContact");
     }
 
@@ -76,7 +73,10 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
     {
         close();
     }
-
+    public void notifyOnLoginFailedFromJnNI(byte reason)
+    {
+        notifyOnLoginFailed(AUTHENTICATION_STATUS.convert(reason));
+    }
     public void notifyOnMessageReceivedFromJNI(int senderId, String messageText)
     {
         Contact sender = m_controller.getContact(senderId);
@@ -144,7 +144,7 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
             Log.d("Controller","L:"+lastname);
 
             byte state = bb.get(count++);
-            Contact contact  = new Contact(id,username,firstname,lastname,Contact.CONTACT_STATE.convert(state));
+            Contact contact  = new Contact(id,username,firstname,lastname, BaseUser.USER_STATE.convert(state));
             contactList.add(contact);
 
             notifyOnContactsReceived(contactList);
@@ -190,7 +190,7 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
                 lastname += (char)c;
             }
             while (c != 0);
-            Log.d("Controller","L:"+lastname);
+            Log.d("Controller", "L:" + lastname);
 
             UserDetails userDetails = new UserDetails(id,firstname,lastname);
 
@@ -201,9 +201,14 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
     void notifyOnContactOnlineStatusChangedFromJNI(int contactId, byte state)
     {
         Contact contact = m_controller.getContact(contactId);
-        contact.setState(Contact.CONTACT_STATE.convert(state));
+        contact.setState(BaseUser.USER_STATE.convert(state));
 
         notifyOnContactStatusChanged(contact);
+    }
+
+    public void notifyOnAddContactResponseFromJNI(String userName, byte status)
+    {
+        notifyOnAddContactResponse(userName,ADD_REQUEST_STATUS.convert(status));
     }
 
     private native long createNativeJNIListener(long notifierProxyPointer);

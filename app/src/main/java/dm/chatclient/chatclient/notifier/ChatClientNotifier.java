@@ -83,7 +83,7 @@ public class ChatClientNotifier implements IChatClientNotifier
         }
     }
 
-    public void notifyOnLoginFailed(String reason)
+    public void notifyOnLoginFailed(AUTHENTICATION_STATUS reason)
     {
         if (m_loginListener != null)
         {
@@ -141,13 +141,13 @@ public class ChatClientNotifier implements IChatClientNotifier
     }
 
     @Override
-    public void notifyOnAddContactResponse(String userName, boolean accepted)
+    public void notifyOnAddContactResponse(String userName, ADD_REQUEST_STATUS status)
     {
         List<IRuntimeListener> reverseList =(List<IRuntimeListener>) ((ArrayList<IRuntimeListener>)m_runtimeListeners).clone();
         Collections.reverse(reverseList);
         for(IRuntimeListener listener : reverseList)
         {
-            listener.onAddContactResponse(userName, accepted);
+            listener.onAddContactResponse(userName, status);
         }
     }
 
