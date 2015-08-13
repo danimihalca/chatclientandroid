@@ -1,7 +1,6 @@
 package dm.chatclient.controller;
 
-import dm.chatclient.chatclient.listener.ILoginListener;
-import dm.chatclient.chatclient.listener.IRuntimeListener;
+import dm.chatclient.chatclient.listener.*;
 import dm.chatclient.model.BaseUser;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
@@ -11,9 +10,16 @@ import java.util.List;
 
 public interface IChatClientController
 {
+    void addRegisterListener(IRegisterListener listener);
+
+    void removeRegisterListener(IRegisterListener listener);
+
+    void addUpdateListener(IUpdateListener listener);
+
+    void removeUpdateListener(IUpdateListener listener);
+
     void addRuntimeListener(IRuntimeListener listener);
     void removeRuntimeListener(IRuntimeListener listener);
-    void setLoginListener(ILoginListener listener);
 
     void requestContacts();
 
@@ -36,6 +42,8 @@ public interface IChatClientController
     void clearMessages();
     void clearContacts();
 
+    void setConnected(boolean connected);
+
     User getUser();
     void setUser(User user);
 
@@ -44,4 +52,13 @@ public interface IChatClientController
 
     BaseUser.USER_STATE getState();
     void changeState(BaseUser.USER_STATE state);
+
+    void registerUser(User user);
+    void updateUser(User user);
+
+    boolean isConnected();
+
+    void addLoginListener(ILoginListener listener);
+
+    void removeLoginListener(ILoginListener listener);
 }

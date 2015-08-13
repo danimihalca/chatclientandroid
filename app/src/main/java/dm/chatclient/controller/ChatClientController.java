@@ -2,8 +2,7 @@ package dm.chatclient.controller;
 
 import dm.chatclient.chatclient.ChatClientJNIProxy;
 import dm.chatclient.chatclient.IChatClient;
-import dm.chatclient.chatclient.listener.ILoginListener;
-import dm.chatclient.chatclient.listener.IRuntimeListener;
+import dm.chatclient.chatclient.listener.*;
 import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.chatclient.notifier.JNIChatClientNotifier;
 import dm.chatclient.model.BaseUser;
@@ -24,6 +23,7 @@ public class ChatClientController implements IChatClientController
     private IChatClient m_chatClient;
     private IChatClientNotifier m_notifier;
     private User m_user;
+    private boolean m_isconnected;
 
     public BaseUser.USER_STATE getState()
     {
@@ -36,6 +36,31 @@ public class ChatClientController implements IChatClientController
         m_chatClient.changeState(m_state);
     }
 
+    @Override
+    public void registerUser(User user)
+    {
+        m_chatClient.registerUser(user);
+    }
+
+    @Override
+    public void updateUser(User user)
+    {
+        m_chatClient.updateUser(user);
+    }
+
+    @Override
+    public boolean isConnected()
+    {
+        return m_isconnected;
+    }
+
+
+    @Override
+    public void setConnected(boolean connected)
+    {
+        m_isconnected = connected;
+    }
+
     private BaseUser.USER_STATE m_state;
 
     public ChatClientController()
@@ -45,6 +70,8 @@ public class ChatClientController implements IChatClientController
         m_chatClient = new ChatClientJNIProxy();
         m_notifier = new JNIChatClientNotifier(this);
         m_chatClient.addListener(m_notifier);
+        m_isconnected =false;
+        m_user = new User();
 
     }
 
@@ -56,7 +83,10 @@ public class ChatClientController implements IChatClientController
     @Override
     public void setUser(User user)
     {
-        m_user =user;
+        m_user.setUserName(user.getUserName());
+        m_user.setFirstName(user.getFirstName());
+        m_user.setLastName(user.getLastName());
+        m_user.setPassword(user.getPassword());
     }
 
     @Override
@@ -136,25 +166,63 @@ public class ChatClientController implements IChatClientController
         m_contactRepository.clearContacts();
     }
 
-    public void addRuntimeListener(IRuntimeListener listener)
-    {
-        m_notifier.addRuntimeListener(listener);
-    }
-
-    public void removeRuntimeListener(IRuntimeListener listener)
-    {
-        m_notifier.removeRuntimeListener(listener);
-    }
-
     public void setLoginListener(ILoginListener listener)
     {
-        m_notifier.setLoginListener(listener);
+        m_notifier.addLoginListener(listener);
     }
 
 
     public void addReceivedMessage(Message message)
     {
         m_messageRepository.addMessage(message);
+    }
+
+    @Override
+    public void addRegisterListener(IRegisterListener listener)
+    {
+        m_notifier.addRegisterListener(listener);
+    }
+
+    @Override
+    public void removeRegisterListener(IRegisterListener listener)
+    {
+        m_notifier.removeRegisterListener(listener);
+    }
+
+    @Override
+    public void addUpdateListener(IUpdateListener listener)
+    {
+        m_notifier.addUpdateListener(listener);
+    }
+
+    @Override
+    public void removeUpdateListener(IUpdateListener listener)
+    {
+        m_notifier.removeUpdateListener(listener);
+    }
+
+    @Override
+    public void addRuntimeListener(IRuntimeListener listener)
+    {
+        m_notifier.addRuntimeListener(listener);
+    }
+
+    @Override
+    public void removeRuntimeListener(IRuntimeListener listener)
+    {
+        m_notifier.removeRuntimeListener(listener);
+    }
+
+    @Override
+    public void addLoginListener(ILoginListener listener)
+    {
+        m_notifier.addLoginListener(listener);
+    }
+
+    @Override
+    public void removeLoginListener(ILoginListener listener)
+    {
+        m_notifier.removeLoginListener(listener);
     }
 
 }

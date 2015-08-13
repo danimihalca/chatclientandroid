@@ -1,7 +1,6 @@
 package dm.chatclient.chatclient.notifier;
 
-import dm.chatclient.chatclient.listener.ILoginListener;
-import dm.chatclient.chatclient.listener.IRuntimeListener;
+import dm.chatclient.chatclient.listener.*;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 import dm.chatclient.model.UserDetails;
@@ -13,6 +12,7 @@ import java.util.List;
  */
 public interface IChatClientNotifier
 {
+
     public enum AUTHENTICATION_STATUS
     {
         AUTH_SUCCESSFUL ,
@@ -58,9 +58,42 @@ public interface IChatClientNotifier
             return  ADD_YOURSELF;
         }
     };
+
+
+    enum REGISTER_UPDATE_USER_STATUS
+    {
+        USER_OK,
+        USER_EXISTING_USERNAME ,
+        USER_INVALID_INPUT ;
+        public static REGISTER_UPDATE_USER_STATUS convert(byte ordinal)
+        {
+            switch (ordinal)
+            {
+                case 0:
+                    return USER_OK;
+                case 1:
+                    return USER_EXISTING_USERNAME;
+                case 2:
+                    return USER_INVALID_INPUT;
+            }
+            return  USER_INVALID_INPUT;
+        }
+
+    };
+
+    void addRegisterListener(IRegisterListener listener);
+
+    void removeRegisterListener(IRegisterListener listener);
+
+    void addUpdateListener(IUpdateListener listener);
+
+    void removeUpdateListener(IUpdateListener listener);
+
     void addRuntimeListener(IRuntimeListener listener);
     void removeRuntimeListener(IRuntimeListener listener);
-    void setLoginListener(ILoginListener listener);
+    void addLoginListener(ILoginListener listener);
+
+    void removeLoginListener(ILoginListener listener);
 
     void notifyOnConnected();
     void notifyOnDisconnected();
@@ -75,4 +108,7 @@ public interface IChatClientNotifier
     void notifyOnRemovedByContact(int contactId);
     void notifyOnAddContactResponse(String userName, ADD_REQUEST_STATUS status);
     boolean notifyOnAddingByContact(String requester);
+
+    void notifyOnRegisterUpdateResponse(REGISTER_UPDATE_USER_STATUS status);
+
 }

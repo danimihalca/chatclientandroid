@@ -27,7 +27,17 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
     private String m_userName;
     private String m_password;
 
+    private boolean m_performLogin;
+    private boolean m_isvisible;
+
     Button m_loginButton;
+
+    @Override
+    protected void onDestroy()
+    {
+        m_controller.removeLoginListener(this);
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,28 +45,46 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        m_controller = ((ChatClientApplication) getApplication()).getController();
-        m_controller.setLoginListener(LoginActivity.this);
+        m_isvisible =true;
 
+        m_controller = ((ChatClientApplication) getApplication()).getController();
+        m_controller.addLoginListener(LoginActivity.this);
 
         m_loginButton =(Button) findViewById(R.id.loginButton);
         m_loginButton.setOnClickListener(new LoginButtonListener());
 
         Button advancedSettingsButton =(Button) findViewById(R.id.advancedSettingsButton);
         advancedSettingsButton.setOnClickListener(new AdvancedSettingsButtonListener());
+
+        Button registerButton = (Button) findViewById(R.id.registerButton);
+        registerButton.setOnClickListener(new RegisterButtonListener());
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        m_isvisible =false;
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        m_isvisible =true;
     }
 
 
     @Override
     public void onConnected()
     {
+        if (m_performLogin)
+        {
+            m_controller.setConnected(true);
+            doLogin();
+            m_performLogin = false;
+        }
 
-        m_userName = ((EditText) findViewById(R.id.usernameInput)).getText().toString();
-        m_password = ((EditText) findViewById(R.id.passwordInput)).getText().toString();
-
-        BaseUser.USER_STATE state = ((CheckBox) findViewById(R.id.invisibleBox)).isChecked()? BaseUser.USER_STATE.INVISIBLE:
-                BaseUser.USER_STATE.ONLINE;
-        m_controller.login(m_userName, m_password,state);
     }
 
     @Override
@@ -110,7 +138,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
              public void run()
              {
                  m_loginButton.setEnabled(true);
-//                 Log.d("onLoginFailed")
                  ToastDisplayer.displayToast(getApplicationContext(),"Connection error!");
              }
          });
@@ -124,12 +151,30 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
          {
 
              m_loginButton.setEnabled(false);
-
-             m_controller.connect("192.168.0.3", 9003);
-
+             if (m_controller.isConnected())
+             {
+                 doLogin();
+                 m_performLogin = false;
+             }
+             else
+             {
+                 m_performLogin = true;
+                 m_controller.connect("192.168.0.3",9003);
+             }
 
          }
      }
+
+    private void doLogin()
+    {
+        m_userName = ((EditText) findViewById(R.id.usernameInput)).getText().toString();
+        m_password = ((EditText) findViewById(R.id.passwordInput)).getText().toString();
+
+        BaseUser.USER_STATE state = ((CheckBox) findViewById(R.id.invisibleBox))
+                .isChecked()? BaseUser.USER_STATE.INVISIBLE:
+                BaseUser.USER_STATE.ONLINE;
+        m_controller.login(m_userName, m_password, state);
+    }
 
      class AdvancedSettingsButtonListener implements View.OnClickListener
      {
@@ -140,4 +185,14 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
              startActivity(intent);
          }
      }
+
+    class RegisterButtonListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View view)
+        {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        }
+    }
  }

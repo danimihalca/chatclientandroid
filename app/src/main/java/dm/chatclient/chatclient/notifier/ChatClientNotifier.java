@@ -1,7 +1,6 @@
 package dm.chatclient.chatclient.notifier;
 
-import dm.chatclient.chatclient.listener.ILoginListener;
-import dm.chatclient.chatclient.listener.IRuntimeListener;
+import dm.chatclient.chatclient.listener.*;
 import dm.chatclient.controller.IChatClientController;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
@@ -17,77 +16,148 @@ import java.util.List;
 public class ChatClientNotifier implements IChatClientNotifier
 {
     protected IChatClientController m_controller;
-    private ILoginListener m_loginListener;
+
+    private List<IConnectListener> m_connectListeners;
+    private List<ILoginListener> m_loginListeners;
+    private List<IRegisterUpdateListener> m_registerUpdateListeners;
     private List<IRuntimeListener> m_runtimeListeners;
+
 
     public ChatClientNotifier(IChatClientController controller)
     {
         m_controller = controller;
         m_runtimeListeners = new ArrayList<IRuntimeListener>();
+        m_connectListeners =new ArrayList<IConnectListener>();
+        m_loginListeners = new ArrayList<ILoginListener>();
+        m_registerUpdateListeners = new ArrayList<IRegisterUpdateListener>();
     }
 
+    @Override
+    public void addRegisterListener(IRegisterListener listener)
+    {
+        m_registerUpdateListeners.add(listener);
+        m_connectListeners.add(listener);
+    }
+    @Override
+    public void removeRegisterListener(IRegisterListener listener)
+    {
+        m_registerUpdateListeners.remove(listener);
+        m_connectListeners.remove(listener);
+    }
+
+    @Override
+    public void addUpdateListener(IUpdateListener listener)
+    {
+        m_registerUpdateListeners.add(listener);
+        m_runtimeListeners.add(listener);
+    }
+    @Override
+    public void removeUpdateListener(IUpdateListener listener)
+    {
+        m_registerUpdateListeners.remove(listener);
+        m_runtimeListeners.remove(listener);
+    }
+
+    @Override
     public void addRuntimeListener(IRuntimeListener listener)
     {
         m_runtimeListeners.add(listener);
     }
 
+    @Override
     public void removeRuntimeListener(IRuntimeListener listener)
     {
         m_runtimeListeners.remove(listener);
     }
 
-    public void setLoginListener(ILoginListener listener)
+    @Override
+    public void addLoginListener(ILoginListener listener)
     {
-        m_loginListener = listener;
+        m_loginListeners.add(listener);
+        m_connectListeners.add(listener);
+    }
+
+    @Override
+    public void removeLoginListener(ILoginListener listener)
+    {
+        m_loginListeners.remove(listener);
+        m_connectListeners.remove(listener);
     }
 
     public void notifyOnConnected()
     {
-        if (m_loginListener != null)
+
+        List<IConnectListener> reverseList =(List<IConnectListener>) ((ArrayList<IConnectListener>)m_connectListeners).clone();
+        Collections.reverse(reverseList);
+        for(IConnectListener listener : reverseList)
         {
-            m_loginListener.onConnected();
+            listener.onConnected();
         }
     }
 
     public void notifyOnDisconnected()
     {
+        m_controller.setConnected(false);
         m_controller.clearContacts();
         m_controller.clearMessages();
 
-        List<IRuntimeListener> reverseList =(List<IRuntimeListener>) ((ArrayList<IRuntimeListener>)m_runtimeListeners).clone();
-        Collections.reverse(reverseList);
-        for(IRuntimeListener listener : reverseList)
+        List<IRuntimeListener> reverseRuntimeListeners =
+                (List<IRuntimeListener>) ((ArrayList<IRuntimeListener>)m_runtimeListeners).clone();
+        Collections.reverse(reverseRuntimeListeners);
+        for(IRuntimeListener listener : reverseRuntimeListeners)
         {
             listener.onDisconnected();
         }
 
-        if (m_loginListener != null)
+        List<IConnectListener> reverseConnectListeners =
+                (List<IConnectListener>) ((ArrayList<IConnectListener>)m_connectListeners).clone();
+        Collections.reverse(reverseRuntimeListeners);
+        for(IConnectListener listener : reverseConnectListeners)
         {
-            m_loginListener.onDisconnected();
+            listener.onDisconnected();
         }
+
+//        List<IRegisterUpdateListener> reverseRegisterUpdateListeners =
+//                (List<IRegisterUpdateListener>) ((ArrayList<IRegisterUpdateListener>)m_registerUpdateListeners).clone();
+//        Collections.reverse(reverseRuntimeListeners);
+//        for(IRegisterUpdateListener listener : reverseRegisterUpdateListeners)
+//        {
+//            listener.onDisconnected();
+//        }
+//
+//        if (m_registerUpdateListener != null)
+//        {
+//            m_registerUpdateListener.onDisconnected();
+//        }
     }
 
     public void notifyOnConnectionError()
     {
-        if (m_loginListener != null)
+        List<IConnectListener> reverseList =(List<IConnectListener>) ((ArrayList<IConnectListener>)m_connectListeners).clone();
+        Collections.reverse(reverseList);
+        for(IConnectListener listener : reverseList)
         {
-            m_loginListener.onConnectionError();
+            listener.onConnectionError();
         }
     }
 
     public void notifyOnLoginSuccessful(UserDetails userDetails)
     {
-        if (m_loginListener != null)
+        List<ILoginListener> reverseList =(List<ILoginListener>) ((ArrayList<ILoginListener>)m_loginListeners).clone();
+        Collections.reverse(reverseList);
+        for(ILoginListener listener : reverseList)
         {
-            m_loginListener.onLoginSuccessful(userDetails);
+            listener.onLoginSuccessful(userDetails);
         }
     }
 
     public void notifyOnLoginFailed(AUTHENTICATION_STATUS reason)
     {
-        if (m_loginListener != null)
+        List<ILoginListener> reverseList =(List<ILoginListener>) ((ArrayList<ILoginListener>)m_loginListeners).clone();
+        Collections.reverse(reverseList);
+        for(ILoginListener listener : reverseList)
         {
-            m_loginListener.onLoginFailed(reason);
+            listener.onLoginFailed(reason);
         }
     }
 
@@ -132,6 +202,8 @@ public class ChatClientNotifier implements IChatClientNotifier
     public void notifyOnRemovedByContact(int contactId)
     {
         Contact contact = m_controller.getContact(contactId);
+        m_controller.removeContact(contact, true);
+
         List<IRuntimeListener> reverseList =(List<IRuntimeListener>) ((ArrayList<IRuntimeListener>)m_runtimeListeners).clone();
         Collections.reverse(reverseList);
         for(IRuntimeListener listener : reverseList)
@@ -165,5 +237,17 @@ public class ChatClientNotifier implements IChatClientNotifier
             }
         }
         return false;
+    }
+
+    @Override
+    public void notifyOnRegisterUpdateResponse(REGISTER_UPDATE_USER_STATUS status)
+    {
+        List<IRegisterUpdateListener> reverseList =(List<IRegisterUpdateListener>)
+                ((ArrayList<IRegisterUpdateListener>)m_registerUpdateListeners).clone();
+        Collections.reverse(reverseList);
+        for(IRegisterUpdateListener listener : reverseList)
+        {
+            listener.onRegisterUpdateResponse(status);
+        }
     }
 }

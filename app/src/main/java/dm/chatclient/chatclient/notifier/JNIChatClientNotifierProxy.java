@@ -21,7 +21,11 @@ public class JNIChatClientNotifierProxy implements Closeable
 
         ON_REMOVED_BY_CONTACT,
         ON_ADD_CONTACT_RESPONSE,
-        ON_ADDING_BY_CONTACT
+        ON_ADDING_BY_CONTACT,
+
+        ON_REGISTER_UPDATE_RESPONSE
+
+
     }
 
     private long m_nativeNotifierProxy;
@@ -88,6 +92,11 @@ public class JNIChatClientNotifierProxy implements Closeable
     public void setOnAddingByContactCallback(String methodName)
     {
         setCallbackMethod(CALLBACK_METHOD.ON_ADDING_BY_CONTACT, methodName);
+    }
+
+    public void setOnRegisterUpdateResponse(String methodName)
+    {
+        setCallbackMethod(CALLBACK_METHOD.ON_REGISTER_UPDATE_RESPONSE, methodName);
     }
 
     @Override

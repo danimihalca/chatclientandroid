@@ -25,10 +25,10 @@
 
         <Button android:id="@+id/changeStateButton" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="Change state" />
+                android:text="State" />
 
-        <Button android:id="@+id/canchelButton" android:layout_width="wrap_content"
+        <Button android:id="@+id/updateButton" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="BB" />
+                android:text="Update" />
     </LinearLayout>
 </RelativeLayout>

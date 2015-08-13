@@ -4,6 +4,7 @@ import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.model.BaseUser;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
+import dm.chatclient.model.User;
 
 /**
  * Created by Ice on 8/9/2015.
@@ -26,4 +27,7 @@ public interface IChatClient
     void removeContact(int contactId);
 
     void changeState(BaseUser.USER_STATE state);
+
+    void registerUser(User user);
+    void updateUser(User user);
 }

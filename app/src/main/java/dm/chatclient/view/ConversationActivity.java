@@ -52,7 +52,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
         m_contact = m_controller.getContact(id);
         m_contact.setUnreadMessagesCount(0);
 
-        setTitle(m_contact.getFirstName());
+        setTitle(m_contact.getFirstName()+" "+m_contact.getLastName());
 
         m_sendButton = (Button) findViewById(R.id.sendButton);
         m_sendButton.setOnClickListener(new SendButtonListener());
@@ -63,6 +63,20 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
         m_messageListView.setAdapter(m_messageListAdapter);
 
         m_isVisible =true;
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        m_isVisible = false;
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        m_isVisible = true;
     }
 
     @Override
@@ -108,7 +122,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
     }
 
     @Override
-    public void onRemovedByContact(Contact contact)
+    public void onRemovedByContact(final Contact contact)
     {
         if (contact.getId() == m_contact.getId())
         {
@@ -121,12 +135,35 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
                 }
             });
         }
+        else
+        {
+            if (m_isVisible)
+            {
+                m_controller.removeContact(contact, true);
+                this.runOnUiThread(new Runnable()
+                {
+                    public void run()
+                    {
+                        ToastDisplayer.displayToast(getApplicationContext(), contact.getUserName() + " removed you from his contacts");
+                    }
+                });
+            }
+        }
     }
 
     @Override
-    public void onAddContactResponse(String userName, IChatClientNotifier.ADD_REQUEST_STATUS status)
+    public void onAddContactResponse(final String userName, final IChatClientNotifier.ADD_REQUEST_STATUS status)
     {
-
+        if (m_isVisible)
+        {
+            this.runOnUiThread(new Runnable()
+            {
+                public void run()
+                {
+                    ToastDisplayer.displayToast(getApplicationContext(), userName + ":"+status.toString());
+                }
+            });
+        }
     }
 
     @Override
@@ -140,16 +177,14 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
             requestFragment.setArguments(args);
             Log.d("onAddingByContact", requester);
 
-            if (m_isVisible)
+            this.runOnUiThread(new Runnable()
             {
-                this.runOnUiThread(new Runnable()
+                public void run()
                 {
-                    public void run()
-                    {
-                        requestFragment.show(getSupportFragmentManager(),"req");
-                    }
-                });
-            }
+                    requestFragment.show(getSupportFragmentManager(),"req");
+                }
+            });
+
             while (!requestFragment.isDecided())
             {
                 try
@@ -163,7 +198,9 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
             return requestFragment.isAccepted();
         }
 
-        return false;    }
+        return false;
+    }
+
 
 
     @Override
@@ -176,6 +213,16 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
     @Override
     public void onContactsReceived()
     {
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                setTitle(m_contact.getFirstName()+" "+m_contact.getLastName());
+                m_messageListAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     @Override

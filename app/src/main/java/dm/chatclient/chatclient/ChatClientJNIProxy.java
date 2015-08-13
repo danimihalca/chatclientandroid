@@ -4,6 +4,7 @@ import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.chatclient.notifier.JNIChatClientNotifier;
 import dm.chatclient.model.BaseUser;
 import dm.chatclient.model.Message;
+import dm.chatclient.model.User;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -78,7 +79,20 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
     @Override
     public void changeState(BaseUser.USER_STATE state)
     {
-        changeStateNative(m_nativeChatClient,state.ordinal());
+        changeStateNative(m_nativeChatClient, state.ordinal());
+    }
+
+    @Override
+    public void registerUser(User user)
+    {
+        registerUserNative(m_nativeChatClient, user.getUserName(), user.getPassword(), user.getFirstName(), user.getLastName());
+    }
+
+    @Override
+    public void updateUser(User user)
+    {
+        updateUserNative(m_nativeChatClient, user.getUserName(), user.getPassword(), user.getFirstName(), user.getLastName());
+
     }
 
 
@@ -124,5 +138,11 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
     private native void removeContactNative(long m_nativeChatClient, int contactId);
 
     private native void changeStateNative(long m_nativeChatClient,int state);
+
+    private native void registerUserNative(long m_nativeChatClient, String userName, String password,
+                                           String firstName, String lastName);
+
+    private native void updateUserNative(long m_nativeChatClient, String userName, String password,
+                                         String firstName, String lastName);
 
 }

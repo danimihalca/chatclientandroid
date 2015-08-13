@@ -27,7 +27,6 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     private IChatClientController m_controller;
     private boolean m_close;
     private boolean m_isVisible;
-//    private List<Contact> m_contacts;
     private ListView m_contactListView;
     ContactListAdapter contactListAdapter;
 
@@ -76,6 +75,9 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
                 fragment.show(getSupportFragmentManager(),"Change state");
             }
         });
+
+        Button updateButton = (Button) findViewById(R.id.updateButton);
+        updateButton.setOnClickListener(new UpdateButtonListener());
     }
 
     @Override
@@ -113,7 +115,6 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-//        menu.add(0, 3, 2, "Delete");
         menu.add("Delete");
         super.onCreateContextMenu(menu, v, menuInfo);
     }
@@ -130,7 +131,6 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
             ToastDisplayer.displayToast(getApplicationContext(), contact.getUserName() + " has been removed from contacts");
             contactListAdapter.remove(contact);
             contactListAdapter.notifyDataSetChanged();
-//            contactListAdapter.remove();
         }
         return true;
     }
@@ -142,7 +142,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
         {
             public void run()
             {
-                   contactListAdapter.notifyDataSetChanged();
+                contactListAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -150,13 +150,14 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     @Override
     public void onRemovedByContact(final Contact contact)
     {
-        Log.d("onRemovedByContact", contact.getUserName());
-        m_controller.removeContact(contact, true);
         this.runOnUiThread(new Runnable()
         {
             public void run()
             {
-                ToastDisplayer.displayToast(getApplicationContext(), contact.getUserName() + " removed you from his contacts");
+                if (m_isVisible)
+                {
+                    ToastDisplayer.displayToast(getApplicationContext(), contact.getUserName() + " removed you from his contacts");
+                }
                 contactListAdapter.remove(contact);
                 contactListAdapter.notifyDataSetChanged();
             }
@@ -166,14 +167,16 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     @Override
     public void onAddContactResponse(final String userName, final IChatClientNotifier.ADD_REQUEST_STATUS status)
     {
-        Log.d("onAddContactResponse",userName + " "+ status.toString());
-        this.runOnUiThread(new Runnable()
+        if (m_isVisible)
         {
-            public void run()
+            this.runOnUiThread(new Runnable()
             {
-                ToastDisplayer.displayToast(getApplicationContext(), userName + ":"+status.toString());
-            }
-        });
+                public void run()
+                {
+                    ToastDisplayer.displayToast(getApplicationContext(), userName + ":"+status.toString());
+                }
+            });
+        }
     }
 
     @Override
@@ -185,18 +188,16 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
             Bundle args = new Bundle();
             args.putString("userName", requester);
             requestFragment.setArguments(args);
-            Log.d("onAddingByContact",requester);
+            Log.d("onAddingByContact", requester);
 
-            if (m_isVisible)
+            this.runOnUiThread(new Runnable()
             {
-                this.runOnUiThread(new Runnable()
+                public void run()
                 {
-                    public void run()
-                    {
-                        requestFragment.show(getSupportFragmentManager(),"req");
-                    }
-                });
-            }
+                    requestFragment.show(getSupportFragmentManager(),"req");
+                }
+            });
+
             while (!requestFragment.isDecided())
             {
                 try
@@ -212,6 +213,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
 
         return false;
     }
+
 
 
     @Override
@@ -268,6 +270,15 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
            intent.putExtra("ContactId", c.getId());
            startActivity(intent);
        }
+    }
 
+    class UpdateButtonListener implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View view)
+        {
+            Intent intent = new Intent(ContactListActivity.this, UpdateActivity.class);
+            startActivity(intent);
+        }
     }
 }

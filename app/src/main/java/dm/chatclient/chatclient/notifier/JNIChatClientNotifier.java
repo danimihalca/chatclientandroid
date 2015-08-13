@@ -65,6 +65,8 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
         notifierProxy.setOnRemovedByContactCallback("notifyOnRemovedByContact");
         notifierProxy.setOnAddContactResponseCallback("notifyOnAddContactResponseFromJNI");
         notifierProxy.setOnAddingByContactCallback("notifyOnAddingByContact");
+
+        notifierProxy.setOnRegisterUpdateResponse("notifyOnRegisterUpdateResponseFromJNI");
     }
 
 
@@ -208,7 +210,12 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
 
     public void notifyOnAddContactResponseFromJNI(String userName, byte status)
     {
-        notifyOnAddContactResponse(userName,ADD_REQUEST_STATUS.convert(status));
+        notifyOnAddContactResponse(userName, ADD_REQUEST_STATUS.convert(status));
+    }
+
+    public void notifyOnRegisterUpdateResponseFromJNI(byte status)
+    {
+        notifyOnRegisterUpdateResponse(REGISTER_UPDATE_USER_STATUS.convert(status));
     }
 
     private native long createNativeJNIListener(long notifierProxyPointer);

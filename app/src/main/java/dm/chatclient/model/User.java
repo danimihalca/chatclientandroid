@@ -7,6 +7,11 @@ public class User extends BaseUser
 {
     private String m_password;
 
+    public User()
+    {
+
+    }
+
     public User(int id, String userName, String password, String firstName, String lastName)
     {
         super(id, userName, firstName, lastName);

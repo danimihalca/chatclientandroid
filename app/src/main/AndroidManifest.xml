@@ -34,8 +34,16 @@
         </activity>
         <activity
             android:name=".view.ConversationActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:label="@string/title_activity_conversation" >
+            android:label="@string/title_activity_conversation"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name=".view.RegisterActivity"
+            android:label="@string/title_activity_register_update" >
+        </activity>
+        <activity
+                android:name=".view.UpdateActivity"
+                android:label="@string/title_activity_register_update" >
         </activity>
     </application>
 

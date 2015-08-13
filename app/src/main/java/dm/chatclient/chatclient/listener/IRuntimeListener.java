@@ -16,4 +16,6 @@ public interface IRuntimeListener extends IBaseListener
     void onRemovedByContact(Contact contact);
     void onAddContactResponse(String userName,  IChatClientNotifier.ADD_REQUEST_STATUS status);
     boolean onAddingByContact(String requester);
+
+
 }

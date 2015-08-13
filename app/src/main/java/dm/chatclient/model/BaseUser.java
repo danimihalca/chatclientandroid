@@ -37,6 +37,10 @@ public abstract class BaseUser
     private String m_firstName;
     private String m_lastName;
 
+    public BaseUser()
+    {
+    }
+
     public BaseUser(int id, String userName, String fullName, String lastName)
     {
         m_id = id;

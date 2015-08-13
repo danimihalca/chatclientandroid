@@ -71,8 +71,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Advanced"
-                android:id="@+id/advancedSettingsButton" android:layout_alignTop="@+id/loginButton" android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"/>
+                android:id="@+id/advancedSettingsButton"
+                android:layout_alignTop="@+id/invisibleBox" android:layout_alignLeft="@+id/passwordLabel"
+                android:layout_alignStart="@+id/passwordLabel"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                android:id="@+id/registerButton" android:layout_alignBottom="@+id/loginButton"
+                android:layout_alignLeft="@+id/advancedSettingsButton"
+                android:layout_alignStart="@+id/advancedSettingsButton" android:layout_alignRight="@+id/passwordLabel"
+                android:layout_alignEnd="@+id/passwordLabel"/>
     </RelativeLayout>
 </RelativeLayout>

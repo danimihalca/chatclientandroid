@@ -4,4 +4,8 @@
     <string name="title_activity_advanced_settings">Advanced Settings</string>
     <string name="title_activity_contact_list">Contacts</string>
     <string name="title_activity_conversation">Conversation</string>
+    <string name="title_activity_register_update">RegisterUpdate</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 </resources>
