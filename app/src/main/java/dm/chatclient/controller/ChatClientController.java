@@ -6,6 +6,7 @@ import dm.chatclient.chatclient.listener.ILoginListener;
 import dm.chatclient.chatclient.listener.IRuntimeListener;
 import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.chatclient.notifier.JNIChatClientNotifier;
+import dm.chatclient.model.BaseUser;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 import dm.chatclient.model.User;
@@ -67,9 +68,9 @@ public class ChatClientController implements IChatClientController
         m_chatClient.connect(address, port);
     }
 
-    public void login(String username, String password)
+    public void login(String username, String password, BaseUser.USER_STATE state)
     {
-        m_chatClient.login(username, password);
+        m_chatClient.login(username, password, state);
     }
 
     public void disconnect()

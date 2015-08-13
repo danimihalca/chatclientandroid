@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import dm.chatclient.R;
 
@@ -13,6 +14,7 @@ import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.controller.IChatClientController;
 
 import dm.chatclient.ChatClientApplication;
+import dm.chatclient.model.BaseUser;
 import dm.chatclient.model.User;
 import dm.chatclient.model.UserDetails;
 import dm.chatclient.utils.ToastDisplayer;
@@ -51,7 +53,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginListener
 
         m_userName = ((EditText) findViewById(R.id.usernameInput)).getText().toString();
         m_password = ((EditText) findViewById(R.id.passwordInput)).getText().toString();
-        m_controller.login(m_userName, m_password);
+
+        BaseUser.USER_STATE state = ((CheckBox) findViewById(R.id.invisibleBox)).isChecked()? BaseUser.USER_STATE.INVISIBLE:
+                BaseUser.USER_STATE.ONLINE;
+        m_controller.login(m_userName, m_password,state);
     }
 
     @Override

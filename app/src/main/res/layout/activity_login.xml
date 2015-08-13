@@ -62,8 +62,8 @@
         <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Remember me"
-                android:id="@+id/rememberMeBox"
+                android:text="Invisible"
+                android:id="@+id/invisibleBox"
                 android:textSize="20dp"
                 android:layout_below="@+id/passwordInput" android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" android:layout_marginTop="10dp" android:layout_marginRight="5dp"/>

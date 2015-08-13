@@ -2,6 +2,7 @@ package dm.chatclient.chatclient;
 
 import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.chatclient.notifier.JNIChatClientNotifier;
+import dm.chatclient.model.BaseUser;
 import dm.chatclient.model.Message;
 
 import java.io.Closeable;
@@ -33,9 +34,9 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
         connectNative(m_nativeChatClient, address, port);
     }
 
-    public void login(String username, String password)
+    public void login(String username, String password, BaseUser.USER_STATE state)
     {
-        loginNative(m_nativeChatClient, username, password);
+        loginNative(m_nativeChatClient, username, password, state.ordinal());
     }
 
     public void disconnect()
@@ -100,7 +101,7 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
 
     private native void connectNative(long clientAddress, String address, int port);
 
-    private native void loginNative(long clientAddress, String username, String password);
+    private native void loginNative(long clientAddress, String username, String password, int state);
 
     private native void disconnectNative(long clientAddress);
 

@@ -2,6 +2,7 @@ package dm.chatclient.controller;
 
 import dm.chatclient.chatclient.listener.ILoginListener;
 import dm.chatclient.chatclient.listener.IRuntimeListener;
+import dm.chatclient.model.BaseUser;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 import dm.chatclient.model.User;
@@ -17,7 +18,7 @@ public interface IChatClientController
     void requestContacts();
 
     void connect(String address, int port);
-    void login(String userName, String password);
+    void login(String userName, String password,BaseUser.USER_STATE state);
 
     void disconnect();
 

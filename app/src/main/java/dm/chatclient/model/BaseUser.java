@@ -8,7 +8,10 @@ public abstract class BaseUser
     public enum USER_STATE
     {
         OFFLINE,
-        ONLINE;
+        ONLINE,
+        IDLE,
+        BUSY,
+        INVISIBLE;
 
         public static USER_STATE convert(byte ordinal)
         {

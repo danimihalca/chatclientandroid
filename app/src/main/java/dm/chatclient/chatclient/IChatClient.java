@@ -1,6 +1,7 @@
 package dm.chatclient.chatclient;
 
 import dm.chatclient.chatclient.notifier.IChatClientNotifier;
+import dm.chatclient.model.BaseUser;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 
@@ -11,7 +12,7 @@ public interface IChatClient
 {
     void connect(String address, int port);
 
-    void login(String userName, String password);
+    void login(String userName, String password, BaseUser.USER_STATE state);
 
     void disconnect();
     void requestContacts();
