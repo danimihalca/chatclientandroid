@@ -16,6 +16,7 @@ import dm.chatclient.R;
 import dm.chatclient.chatclient.listener.IRuntimeListener;
 import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.controller.IChatClientController;
+import dm.chatclient.model.BaseUser;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 import dm.chatclient.utils.ContactListAdapter;
@@ -58,8 +59,21 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
             public void onClick(View view)
             {
                 AddContactDialogFragment d = new AddContactDialogFragment();
-                String tag ="ADD";
-                d.show(getSupportFragmentManager(),tag);
+                d.show(getSupportFragmentManager(),"Add");
+            }
+        });
+
+        Button changeStateButton = (Button) findViewById(R.id.changeStateButton);
+        changeStateButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                ChangeStateDialogFragment fragment = new ChangeStateDialogFragment();
+                Bundle args = new Bundle();
+                args.putInt("state", m_controller.getState().ordinal());
+                fragment.setArguments(args);
+                fragment.show(getSupportFragmentManager(),"Change state");
             }
         });
     }

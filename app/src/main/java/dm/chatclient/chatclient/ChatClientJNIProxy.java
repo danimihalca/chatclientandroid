@@ -75,6 +75,11 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
         removeContactNative(m_nativeChatClient, contactId);
     }
 
+    @Override
+    public void changeState(BaseUser.USER_STATE state)
+    {
+        changeStateNative(m_nativeChatClient,state.ordinal());
+    }
 
 
     public void requestContacts()
@@ -117,4 +122,7 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
 
     private native void addContactNative(long m_nativeChatClient, String userName);
     private native void removeContactNative(long m_nativeChatClient, int contactId);
+
+    private native void changeStateNative(long m_nativeChatClient,int state);
+
 }

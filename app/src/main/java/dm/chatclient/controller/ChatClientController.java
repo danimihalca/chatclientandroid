@@ -25,6 +25,19 @@ public class ChatClientController implements IChatClientController
     private IChatClientNotifier m_notifier;
     private User m_user;
 
+    public BaseUser.USER_STATE getState()
+    {
+        return m_state;
+    }
+
+    public void changeState(BaseUser.USER_STATE state)
+    {
+        m_state = state;
+        m_chatClient.changeState(m_state);
+    }
+
+    private BaseUser.USER_STATE m_state;
+
     public ChatClientController()
     {
         m_contactRepository = new InMemoryContactRepository();
@@ -71,6 +84,7 @@ public class ChatClientController implements IChatClientController
     public void login(String username, String password, BaseUser.USER_STATE state)
     {
         m_chatClient.login(username, password, state);
+        m_state = state;
     }
 
     public void disconnect()

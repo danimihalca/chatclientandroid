@@ -24,4 +24,6 @@ public interface IChatClient
     void removeListener(IChatClientNotifier m_notifier);
     void addContact(String userName);
     void removeContact(int contactId);
+
+    void changeState(BaseUser.USER_STATE state);
 }

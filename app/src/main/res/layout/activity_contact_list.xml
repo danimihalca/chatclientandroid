@@ -23,9 +23,9 @@
                 android:layout_height="wrap_content" android:layout_weight="1"
                 android:text="Add" android:singleLine="false"/>
 
-        <Button android:id="@+id/cancelButton" android:layout_width="wrap_content"
+        <Button android:id="@+id/changeStateButton" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="BB" />
+                android:text="Change state" />
 
         <Button android:id="@+id/canchelButton" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_weight="1"

@@ -41,4 +41,7 @@ public interface IChatClientController
 
     void addContact(String userName);
     void removeContact(Contact contact, boolean notifyServer);
+
+    BaseUser.USER_STATE getState();
+    void changeState(BaseUser.USER_STATE state);
 }

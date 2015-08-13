@@ -13,7 +13,7 @@ public abstract class BaseUser
         BUSY,
         INVISIBLE;
 
-        public static USER_STATE convert(byte ordinal)
+        public static USER_STATE convert(int ordinal)
         {
             switch (ordinal)
             {
@@ -21,6 +21,12 @@ public abstract class BaseUser
                     return OFFLINE;
                 case 1:
                     return ONLINE;
+                case 2:
+                    return IDLE;
+                case 3:
+                    return BUSY;
+                case 4:
+                    return INVISIBLE;
             }
             return  OFFLINE;
         }
