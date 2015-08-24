@@ -15,35 +15,35 @@ import dm.chatclient.model.BaseUser;
  */
 public class ChangeStateDialogFragment extends DialogFragment
 {
-    private RadioGroup m_stateGroup;
-    private BaseUser.USER_STATE m_state;
+    private RadioGroup stateGroup;
+    private BaseUser.USER_STATE state;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.change_state_layout, container);
         view.setMinimumWidth(300);
         getDialog().setTitle("State");
-        m_state =BaseUser.USER_STATE.convert(getArguments().getInt("state"));
+        state =BaseUser.USER_STATE.convert(getArguments().getInt("state"));
 
-        m_stateGroup = (RadioGroup) view.findViewById(R.id.stateGroup);
+        stateGroup = (RadioGroup) view.findViewById(R.id.stateGroup);
 
-        switch (m_state)
+        switch (state)
         {
             case ONLINE:
-                m_stateGroup.check(R.id.onlineButton);
+                stateGroup.check(R.id.onlineButton);
                 break;
             case IDLE:
-                m_stateGroup.check(R.id.idleButton);
+                stateGroup.check(R.id.idleButton);
                 break;
             case BUSY:
-                m_stateGroup.check(R.id.busyButton);
+                stateGroup.check(R.id.busyButton);
                 break;
             case INVISIBLE:
-                m_stateGroup.check(R.id.invisibleButton);
+                stateGroup.check(R.id.invisibleButton);
                 break;
         }
 
-        m_stateGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        stateGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i)
@@ -51,19 +51,19 @@ public class ChangeStateDialogFragment extends DialogFragment
                 switch (i)
                 {
                     case R.id.onlineButton:
-                        m_state = BaseUser.USER_STATE.ONLINE;
+                        state = BaseUser.USER_STATE.ONLINE;
                         break;
                     case R.id.idleButton:
-                        m_state = BaseUser.USER_STATE.IDLE;
+                        state = BaseUser.USER_STATE.IDLE;
                         break;
                     case R.id.busyButton:
-                        m_state = BaseUser.USER_STATE.BUSY;
+                        state = BaseUser.USER_STATE.BUSY;
                         break;
                     case R.id.invisibleButton:
-                        m_state = BaseUser.USER_STATE.INVISIBLE;
+                        state = BaseUser.USER_STATE.INVISIBLE;
                         break;
                 }
-                ((ChatClientApplication) (getActivity()).getApplication()).getController().changeState(m_state);
+                ((ChatClientApplication) (getActivity()).getApplication()).getController().changeState(state);
                 dismiss();
             }
         });

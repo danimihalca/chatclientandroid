@@ -34,7 +34,7 @@ public class AddContactDialogFragment extends DialogFragment
             @Override
             public void onClick(View view)
             {
-                ((ContactListActivity) getActivity()).addContact(userNameInput.getText().toString());
+                ((ContactListView) getActivity()).addContact(userNameInput.getText().toString());
                 dismiss();
             }
         });

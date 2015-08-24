@@ -16,8 +16,8 @@ import java.util.List;
  */
 public class JNIChatClientNotifier extends ChatClientNotifier implements Closeable
 {
-    private long m_nativeListener;
-    JNIChatClientNotifierProxy notifierProxy;
+    private long nativeListenerPtr;
+    private JNIChatClientNotifierProxy notifierProxy;
 
     static
     {
@@ -31,42 +31,53 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
         notifierProxy= new JNIChatClientNotifierProxy(this);
         initializeNotifierProxy();
 
-        m_nativeListener = createNativeJNIListener(notifierProxy.getNativeNotifierProxy());
+        nativeListenerPtr = createNativeJNIListener(notifierProxy.getNativeNotifierProxyAddress());
     }
 
     public long getListener()
     {
-        return m_nativeListener;
+        return nativeListenerPtr;
     }
 
     @Override
     public void close() throws IOException
     {
-        if (m_nativeListener != 0)
+        if (nativeListenerPtr != 0)
         {
-            destroyNativeJNIListener(m_nativeListener);
-            m_nativeListener = 0;
+            destroyNativeJNIListener(nativeListenerPtr);
+            nativeListenerPtr = 0;
         }
     }
 
     private void initializeNotifierProxy()
     {
 
-        notifierProxy.setOnConnectedCallback("notifyOnConnected");
-        notifierProxy.setOnDisconnectedCallback("notifyOnDisconnected");
-        notifierProxy.setOnConnectionErrorCallback("notifyOnConnectionError");
+//        notifierProxy.setOnConnectedCallback("notifyOnConnected");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_DISCONNECTED,
+                "notifyOnDisconnected");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_CONNECTION_ERROR,
+                "notifyOnConnectionError");
 
-        notifierProxy.setOnLoginFailedCallback("notifyOnLoginFailedFromJnNI");
-        notifierProxy.setOnLoginSuccessfulCallback("notifyOnLoginSuccessfulFromJNI");
-        notifierProxy.setOnMessageReceivedCallback("notifyOnMessageReceivedFromJNI");
-        notifierProxy.setOnContactsReceivedCallback("notifyOnContactsReceivedFromJNI");
-        notifierProxy.setOnContactStatusChangedCallback("notifyOnContactOnlineStatusChangedFromJNI");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_LOGIN_FAILED,
+                "notifyOnLoginFailedFromJNI");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_LOGIN_SUCCESSFUL,
+                "notifyOnLoginSuccessfulFromJNI");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_MESSAGE_RECEIVED,
+                "notifyOnMessageReceivedFromJNI");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_CONTACTS_RECEIVED,
+                "notifyOnContactsReceivedFromJNI");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_CONTACT_STATE_CHANGED
+                ,"notifyOnContactOnlineStatusChangedFromJNI");
 
-        notifierProxy.setOnRemovedByContactCallback("notifyOnRemovedByContact");
-        notifierProxy.setOnAddContactResponseCallback("notifyOnAddContactResponseFromJNI");
-        notifierProxy.setOnAddingByContactCallback("notifyOnAddingByContact");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_REMOVED_BY_CONTACT,
+                "notifyOnRemovedByContact");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_ADD_CONTACT_RESPONSE,
+                "notifyOnAddContactResponseFromJNI");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_ADD_REQUEST,
+                "notifyOnAddRequest");
 
-        notifierProxy.setOnRegisterUpdateResponse("notifyOnRegisterUpdateResponseFromJNI");
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_REGISTER_UPDATE_RESPONSE,
+                "notifyOnRegisterUpdateResponseFromJNI");
     }
 
 
@@ -75,14 +86,14 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
     {
         close();
     }
-    public void notifyOnLoginFailedFromJnNI(byte reason)
+    public void notifyOnLoginFailedFromJNI(byte reason)
     {
         notifyOnLoginFailed(AUTHENTICATION_STATUS.convert(reason));
     }
     public void notifyOnMessageReceivedFromJNI(int senderId, String messageText)
     {
-        Contact sender = m_controller.getContact(senderId);
-        User receiver = m_controller.getUser();
+        Contact sender = controller.getContact(senderId);
+        User receiver = controller.getUser();
 
         Message message = new Message(sender,receiver, messageText);
         notifyOnMessageReceived(message);
@@ -200,9 +211,9 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
     }
 
 
-    void notifyOnContactOnlineStatusChangedFromJNI(int contactId, byte state)
+    public void notifyOnContactOnlineStatusChangedFromJNI(int contactId, byte state)
     {
-        Contact contact = m_controller.getContact(contactId);
+        Contact contact = controller.getContact(contactId);
         contact.setState(BaseUser.USER_STATE.convert(state));
 
         notifyOnContactStatusChanged(contact);
@@ -215,7 +226,7 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
 
     public void notifyOnRegisterUpdateResponseFromJNI(byte status)
     {
-        notifyOnRegisterUpdateResponse(REGISTER_UPDATE_USER_STATUS.convert(status));
+        notifyOnRegisterUpdateResponse(REGISTER_UPDATE_STATUS.convert(status));
     }
 
     private native long createNativeJNIListener(long notifierProxyPointer);

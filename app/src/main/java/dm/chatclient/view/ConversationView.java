@@ -22,17 +22,17 @@ import dm.chatclient.utils.ToastDisplayer;
 import java.util.List;
 
 
-public class ConversationActivity extends AppCompatActivity implements IRuntimeListener
+public class ConversationView extends AppCompatActivity implements IRuntimeListener
 {
-    private IChatClientController m_controller;
+    private IChatClientController controller;
 
-    private Contact m_contact;
-    private ListView m_messageListView;
-    private Button m_sendButton;
-    private EditText m_messageInput;
+    private Contact contact;
+    private ListView messageListView;
+    private Button sendButton;
+    private EditText messageInput;
 
-    private MessageListAdapter m_messageListAdapter;
-    private boolean m_isVisible;
+    private MessageListAdapter messageListAdapter;
+    private boolean isVisible;
 
 
     @Override
@@ -41,48 +41,48 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
 
-        m_controller = ((ChatClientApplication) getApplication()).getController();
-        m_controller.addRuntimeListener(this);
+        controller = ((ChatClientApplication) getApplication()).getController();
+        controller.addRuntimeListener(this);
 
-        m_messageInput = (EditText) findViewById(R.id.messageInput);
+        messageInput = (EditText) findViewById(R.id.messageInput);
 
         Intent intent = getIntent();
         int id = intent.getIntExtra("ContactId", -1);
 
-        m_contact = m_controller.getContact(id);
-        m_contact.setUnreadMessagesCount(0);
+        contact = controller.getContact(id);
+        contact.setUnreadMessagesCount(0);
 
-        setTitle(m_contact.getFirstName()+" "+m_contact.getLastName());
+        setTitle(contact.getFirstName()+" "+contact.getLastName());
 
-        m_sendButton = (Button) findViewById(R.id.sendButton);
-        m_sendButton.setOnClickListener(new SendButtonListener());
+        sendButton = (Button) findViewById(R.id.sendButton);
+        sendButton.setOnClickListener(new SendButtonListener());
 
-        List<Message> receivedMessages = m_controller.getMessages(m_contact);
-        m_messageListView = (ListView) findViewById(R.id.conversationListView);
-        m_messageListAdapter = new MessageListAdapter(getApplicationContext(),receivedMessages);
-        m_messageListView.setAdapter(m_messageListAdapter);
+        List<Message> receivedMessages = controller.getMessages(contact);
+        messageListView = (ListView) findViewById(R.id.conversationListView);
+        messageListAdapter = new MessageListAdapter(getApplicationContext(),receivedMessages);
+        messageListView.setAdapter(messageListAdapter);
 
-        m_isVisible =true;
+        isVisible =true;
     }
 
     @Override
     protected void onPause()
     {
         super.onPause();
-        m_isVisible = false;
+        isVisible = false;
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        m_isVisible = true;
+        isVisible = true;
     }
 
     @Override
     public void onBackPressed()
     {
-        m_controller.removeRuntimeListener(this);
+        controller.removeRuntimeListener(this);
         finish();
     }
 
@@ -92,11 +92,11 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
         @Override
         public void onClick(View view)
         {
-            String messageText = m_messageInput.getText().toString();
+            String messageText = messageInput.getText().toString();
 
-            Message message = new Message(m_controller.getUser(),m_contact,messageText);
-            m_controller.sendMessage(message);
-            m_messageListAdapter.notifyDataSetChanged();
+            Message message = new Message(controller.getUser(),contact,messageText);
+            controller.sendMessage(message);
+            messageListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -108,10 +108,10 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
         {
             public void run()
             {
-                if (m_contact.equals(message.getSender()))
+                if (contact.equals(message.getSender()))
                 {
-                    m_contact.setUnreadMessagesCount(0);
-                    m_messageListAdapter.notifyDataSetChanged();
+                    contact.setUnreadMessagesCount(0);
+                    messageListAdapter.notifyDataSetChanged();
                 }
                 else
                 {
@@ -124,7 +124,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
     @Override
     public void onRemovedByContact(final Contact contact)
     {
-        if (contact.getId() == m_contact.getId())
+        if (contact.getId() == contact.getId())
         {
             this.runOnUiThread(new Runnable()
             {
@@ -137,9 +137,9 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
         }
         else
         {
-            if (m_isVisible)
+            if (isVisible)
             {
-                m_controller.removeContact(contact, true);
+                controller.removeContact(contact, true);
                 this.runOnUiThread(new Runnable()
                 {
                     public void run()
@@ -154,7 +154,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
     @Override
     public void onAddContactResponse(final String userName, final IChatClientNotifier.ADD_REQUEST_STATUS status)
     {
-        if (m_isVisible)
+        if (isVisible)
         {
             this.runOnUiThread(new Runnable()
             {
@@ -167,15 +167,15 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
     }
 
     @Override
-    public boolean onAddingByContact(String requester)
+    public boolean onAddRequest(String requester)
     {
-        if (m_isVisible)
+        if (isVisible)
         {
             final AddContactRequestDialogFragment requestFragment = new AddContactRequestDialogFragment();
             Bundle args = new Bundle();
             args.putString("userName", requester);
             requestFragment.setArguments(args);
-            Log.d("onAddingByContact", requester);
+            Log.d("onAddRequest", requester);
 
             this.runOnUiThread(new Runnable()
             {
@@ -206,7 +206,7 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
     @Override
     public void onDisconnected()
     {
-        m_controller.removeRuntimeListener(this);
+        controller.removeRuntimeListener(this);
         finish();
     }
 
@@ -218,8 +218,8 @@ public class ConversationActivity extends AppCompatActivity implements IRuntimeL
             @Override
             public void run()
             {
-                setTitle(m_contact.getFirstName()+" "+m_contact.getLastName());
-                m_messageListAdapter.notifyDataSetChanged();
+                setTitle(contact.getFirstName()+" "+contact.getLastName());
+                messageListAdapter.notifyDataSetChanged();
             }
         });
 

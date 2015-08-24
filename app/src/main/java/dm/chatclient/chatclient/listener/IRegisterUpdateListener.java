@@ -7,5 +7,5 @@ import dm.chatclient.chatclient.notifier.IChatClientNotifier;
  */
 public interface IRegisterUpdateListener
 {
-    void onRegisterUpdateResponse(IChatClientNotifier.REGISTER_UPDATE_USER_STATUS status);
+    void onRegisterUpdateResponse(IChatClientNotifier.REGISTER_UPDATE_STATUS status);
 }

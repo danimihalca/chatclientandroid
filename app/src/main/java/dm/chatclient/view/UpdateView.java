@@ -9,8 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import dm.chatclient.ChatClientApplication;
 import dm.chatclient.R;
-import dm.chatclient.chatclient.listener.IRegisterUpdateListener;
-import dm.chatclient.chatclient.listener.IRuntimeListener;
 import dm.chatclient.chatclient.listener.IUpdateListener;
 import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.controller.IChatClientController;
@@ -19,18 +17,18 @@ import dm.chatclient.model.Message;
 import dm.chatclient.model.User;
 import dm.chatclient.utils.ToastDisplayer;
 
-public class UpdateActivity extends AppCompatActivity implements IUpdateListener
+public class UpdateView extends AppCompatActivity implements IUpdateListener
 {
-    private IChatClientController m_controller;
-    private User m_user;
+    private IChatClientController controller;
+    private User user;
 
-    private Button m_updateRegisterButton;
+    private Button updateRegisterButton;
 
-    private EditText m_username;
-    private EditText m_password;
-    private EditText m_firstname;
-    private EditText m_lastname;
-    private boolean m_isVisible;
+    private EditText username;
+    private EditText password;
+    private EditText firstname;
+    private EditText lastname;
+    private boolean isVisible;
 
 
     @Override
@@ -39,29 +37,30 @@ public class UpdateActivity extends AppCompatActivity implements IUpdateListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_update);
 
-        m_controller = ((ChatClientApplication) getApplication()).getController();
-        m_updateRegisterButton = (Button) findViewById(R.id.registerUpdateButton);
-        m_user = new User();
-        m_isVisible = true;
+        controller = ((ChatClientApplication) getApplication()).getController();
+        updateRegisterButton = (Button) findViewById(R.id.registerUpdateButton);
+        user = new User();
+        isVisible = true;
 
-        m_username=(EditText) findViewById(R.id.userNameInput);
-        m_password=(EditText) findViewById(R.id.passwordInput);
-        m_firstname=(EditText) findViewById(R.id.firstNameInput);
-        m_lastname=(EditText) findViewById(R.id.lastNameInput);
+        username=(EditText) findViewById(R.id.userNameInput);
+        password=(EditText) findViewById(R.id.passwordInput);
+        firstname=(EditText) findViewById(R.id.firstNameInput);
+        lastname=(EditText) findViewById(R.id.lastNameInput);
 
-        m_controller.addUpdateListener(this);
+        controller.addUpdateListener(this);
 
 
         setTitle("Update");
-        m_updateRegisterButton.setText("Update");
-        m_updateRegisterButton.setOnClickListener(new UpdateButtonListener());
+        updateRegisterButton.setText("Update");
+        updateRegisterButton.setOnClickListener(new UpdateButtonListener());
 
-        User existingUser = m_controller.getUser();
-
-        m_username.setText(existingUser.getUserName());
-        m_password.setText(existingUser.getPassword());
-        m_firstname.setText(existingUser.getFirstName());
-        m_lastname.setText(existingUser.getLastName());
+        User existingUser = controller.getUser();
+        Log.d("update -existing",existingUser.toString());
+        username.setText(existingUser.getUserName());
+        password.setText(existingUser.getPassword());
+        firstname.setText(existingUser.getFirstName());
+        lastname.setText(existingUser.getLastName());
+        Log.d("update -current", user.toString());
 
     }
 
@@ -69,14 +68,14 @@ public class UpdateActivity extends AppCompatActivity implements IUpdateListener
     protected void onPause()
     {
         super.onPause();
-        m_isVisible = false;
+        isVisible = false;
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        m_isVisible = true;
+        isVisible = true;
     }
 
     @Override
@@ -87,7 +86,7 @@ public class UpdateActivity extends AppCompatActivity implements IUpdateListener
     @Override
     public void onContactStatusChanged(final Contact contact)
     {
-        if (m_isVisible)
+        if (isVisible)
         {
             this.runOnUiThread(new Runnable()
             {
@@ -103,7 +102,7 @@ public class UpdateActivity extends AppCompatActivity implements IUpdateListener
     @Override
     public void onMessageReceived(final Message message)
     {
-        if (m_isVisible)
+        if (isVisible)
         {
             this.runOnUiThread(new Runnable()
             {
@@ -120,8 +119,8 @@ public class UpdateActivity extends AppCompatActivity implements IUpdateListener
     @Override
     public void onRemovedByContact(final Contact contact)
     {
-        m_controller.removeContact(contact, true);
-        if (m_isVisible)
+        controller.removeContact(contact, true);
+        if (isVisible)
         {
             this.runOnUiThread(new Runnable()
             {
@@ -140,15 +139,15 @@ public class UpdateActivity extends AppCompatActivity implements IUpdateListener
     }
 
     @Override
-    public boolean onAddingByContact(String requester)
+    public boolean onAddRequest(String requester)
     {
-        if (m_isVisible)
+        if (isVisible)
         {
             final AddContactRequestDialogFragment requestFragment = new AddContactRequestDialogFragment();
             Bundle args = new Bundle();
             args.putString("userName", requester);
             requestFragment.setArguments(args);
-            Log.d("onAddingByContact", requester);
+            Log.d("onAddRequest", requester);
 
             this.runOnUiThread(new Runnable()
             {
@@ -175,17 +174,17 @@ public class UpdateActivity extends AppCompatActivity implements IUpdateListener
     }
 
     @Override
-    public void onRegisterUpdateResponse(final IChatClientNotifier.REGISTER_UPDATE_USER_STATUS status)
+    public void onRegisterUpdateResponse(final IChatClientNotifier.REGISTER_UPDATE_STATUS status)
     {
         this.runOnUiThread(new Runnable()
         {
             public void run()
             {
                 ToastDisplayer.displayToast(getApplicationContext(), "STATUS : " + status.toString());
-                if (status == IChatClientNotifier.REGISTER_UPDATE_USER_STATUS.USER_OK)
+                if (status == IChatClientNotifier.REGISTER_UPDATE_STATUS.USER_OK)
                 {
-                    m_controller.setUser(m_user);
-                    m_controller.removeUpdateListener(UpdateActivity.this);
+                    controller.setUser(user);
+                    controller.removeUpdateListener(UpdateView.this);
                     finish();
                 }
             }
@@ -204,12 +203,12 @@ public class UpdateActivity extends AppCompatActivity implements IUpdateListener
         @Override
         public void onClick(View view)
         {
-            m_user.setUserName(m_username.getText().toString());
-            m_user.setPassword(m_password.getText().toString());
-            m_user.setFirstName(m_firstname.getText().toString());
-            m_user.setLastName(m_lastname.getText().toString());
+            user.setUserName(username.getText().toString());
+            user.setPassword(password.getText().toString());
+            user.setFirstName(firstname.getText().toString());
+            user.setLastName(lastname.getText().toString());
 
-            m_controller.updateUser(m_user);
+            controller.updateUser(user);
         }
     }
 

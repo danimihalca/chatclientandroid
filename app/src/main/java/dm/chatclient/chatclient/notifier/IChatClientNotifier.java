@@ -60,12 +60,12 @@ public interface IChatClientNotifier
     };
 
 
-    enum REGISTER_UPDATE_USER_STATUS
+    enum REGISTER_UPDATE_STATUS
     {
         USER_OK,
         USER_EXISTING_USERNAME ,
         USER_INVALID_INPUT ;
-        public static REGISTER_UPDATE_USER_STATUS convert(byte ordinal)
+        public static REGISTER_UPDATE_STATUS convert(byte ordinal)
         {
             switch (ordinal)
             {
@@ -95,7 +95,7 @@ public interface IChatClientNotifier
 
     void removeLoginListener(ILoginListener listener);
 
-    void notifyOnConnected();
+//    void notifyOnConnected();
     void notifyOnDisconnected();
     void notifyOnConnectionError();
     void notifyOnLoginSuccessful(UserDetails userDetails);
@@ -107,8 +107,8 @@ public interface IChatClientNotifier
 
     void notifyOnRemovedByContact(int contactId);
     void notifyOnAddContactResponse(String userName, ADD_REQUEST_STATUS status);
-    boolean notifyOnAddingByContact(String requester);
+    boolean notifyOnAddRequest(String requester);
 
-    void notifyOnRegisterUpdateResponse(REGISTER_UPDATE_USER_STATUS status);
+    void notifyOnRegisterUpdateResponse(REGISTER_UPDATE_STATUS status);
 
 }

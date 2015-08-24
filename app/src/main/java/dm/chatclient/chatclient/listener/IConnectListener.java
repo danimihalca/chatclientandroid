@@ -5,6 +5,6 @@ package dm.chatclient.chatclient.listener;
  */
 public interface IConnectListener extends IBaseListener
 {
-    void onConnected();
+//    void onConnected();
     void onConnectionError();
 }

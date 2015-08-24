@@ -17,17 +17,17 @@ import dm.chatclient.R;
 
 public class ContactListAdapter extends ArrayAdapter<Contact>
 {
-    private Drawable m_onlineDrawable;
-    private Drawable m_busyDrawable;
-    private Drawable m_idleDrawable;
+    private Drawable onlineDrawable;
+    private Drawable busyDrawable;
+    private Drawable idleDrawable;
     public ContactListAdapter(Context context)
     {
         super(context, 0, new ArrayList<Contact>());
 
-        m_onlineDrawable = getContext().getResources().getDrawable(R.drawable.online);
-        m_busyDrawable = getContext().getResources().getDrawable(R.drawable.offline);
+        onlineDrawable = getContext().getResources().getDrawable(R.drawable.online);
+        busyDrawable = getContext().getResources().getDrawable(R.drawable.offline);
 // TODO:///sdagfagas
-//     m_idleDrawable =
+//     idleDrawable =
     }
 
     public ContactListAdapter(Context context, List<Contact> contacts)
@@ -80,17 +80,17 @@ public class ContactListAdapter extends ArrayAdapter<Contact>
         {
             case ONLINE:
             {
-                onlineImageView.setImageDrawable(m_onlineDrawable);
+                onlineImageView.setImageDrawable(onlineDrawable);
                 break;
             }
             case BUSY:
             {
-                onlineImageView.setImageDrawable(m_busyDrawable);
+                onlineImageView.setImageDrawable(busyDrawable);
                 break;
             }
             case IDLE:
             {
-                onlineImageView.setImageDrawable(m_idleDrawable);
+                onlineImageView.setImageDrawable(idleDrawable);
             }
             case OFFLINE:
             {

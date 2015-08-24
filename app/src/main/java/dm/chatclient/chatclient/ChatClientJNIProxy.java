@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class ChatClientJNIProxy implements IChatClient, Closeable
 {
-    private long m_nativeChatClient;
+    private long nativeChatClientPtr;
 
     static
     {
@@ -26,87 +26,87 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
 
     public ChatClientJNIProxy()
     {
-        m_nativeChatClient = createClientNative();
+        nativeChatClientPtr = createClientNative();
     }
 
 
-    public void connect(String address, int port)
+    public void setServer(String address, int port)
     {
-        connectNative(m_nativeChatClient, address, port);
+        setServerNative(nativeChatClientPtr, address, port);
     }
 
     public void login(String username, String password, BaseUser.USER_STATE state)
     {
-        loginNative(m_nativeChatClient, username, password, state.ordinal());
+        loginNative(nativeChatClientPtr, username, password, state.ordinal());
     }
 
     public void disconnect()
     {
-        disconnectNative(m_nativeChatClient);
+        disconnectNative(nativeChatClientPtr);
     }
 
     public void sendMessage(Message message)
     {
-        sendMessageNative(m_nativeChatClient, message.getReceiver().getId(), message.getMessageText());
+        sendMessageNative(nativeChatClientPtr, message.getReceiver().getId(), message.getMessageText());
     }
 
     @Override
-    public void addListener(IChatClientNotifier m_notifier)
+    public void addListener(IChatClientNotifier notifier)
     {
-        addListenerNative(m_nativeChatClient, ((JNIChatClientNotifier) m_notifier).getListener());
+        addListenerNative(nativeChatClientPtr, ((JNIChatClientNotifier) notifier).getListener());
     }
 
 
     @Override
-    public void removeListener(IChatClientNotifier m_notifier)
+    public void removeListener(IChatClientNotifier notifier)
     {
-        removeListenerNative(m_nativeChatClient, ((JNIChatClientNotifier) m_notifier).getListener());
+        removeListenerNative(nativeChatClientPtr, ((JNIChatClientNotifier) notifier).getListener());
 
     }
 
     @Override
     public void addContact(String userName)
     {
-        addContactNative(m_nativeChatClient, userName);
+        addContactNative(nativeChatClientPtr, userName);
     }
 
     @Override
     public void removeContact(int contactId)
     {
-        removeContactNative(m_nativeChatClient, contactId);
+        removeContactNative(nativeChatClientPtr, contactId);
     }
 
     @Override
     public void changeState(BaseUser.USER_STATE state)
     {
-        changeStateNative(m_nativeChatClient, state.ordinal());
+        changeStateNative(nativeChatClientPtr, state.ordinal());
     }
 
     @Override
     public void registerUser(User user)
     {
-        registerUserNative(m_nativeChatClient, user.getUserName(), user.getPassword(), user.getFirstName(), user.getLastName());
+        registerUserNative(nativeChatClientPtr, user.getUserName(), user.getPassword(), user.getFirstName(), user.getLastName());
     }
 
     @Override
     public void updateUser(User user)
     {
-        updateUserNative(m_nativeChatClient, user.getUserName(), user.getPassword(), user.getFirstName(), user.getLastName());
+        updateUserNative(nativeChatClientPtr, user.getUserName(), user.getPassword(), user.getFirstName(), user.getLastName());
 
     }
 
 
     public void requestContacts()
     {
-        requestContactsNative(m_nativeChatClient);
+        requestContactsNative(nativeChatClientPtr);
     }
 
     public void close() throws IOException
     {
-        if (m_nativeChatClient != 0)
+        if (nativeChatClientPtr != 0)
         {
-            destroyClientNative(m_nativeChatClient);
-            m_nativeChatClient = 0;
+            destroyClientNative(nativeChatClientPtr);
+            nativeChatClientPtr = 0;
         }
     }
 
@@ -118,31 +118,31 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
 
     private native long createClientNative();
 
-    private native void connectNative(long clientAddress, String address, int port);
+    private native void setServerNative(long nativeChatClient, String address, int port);
 
-    private native void loginNative(long clientAddress, String username, String password, int state);
+    private native void loginNative(long nativeChatClient, String username, String password, int state);
 
-    private native void disconnectNative(long clientAddress);
+    private native void disconnectNative(long nativeChatClient);
 
-    private native void sendMessageNative(long clientAddress, int receiverId, String message);
+    private native void sendMessageNative(long nativeChatClient, int receiverId, String message);
 
-    private native void destroyClientNative(long clientAddress);
+    private native void destroyClientNative(long nativeChatClient);
 
-    private native void requestContactsNative(long clientAddress);
+    private native void requestContactsNative(long nativeChatClient);
 
-    private native void addListenerNative(long clientAddress, long listener);
+    private native void addListenerNative(long nativeChatClient, long listener);
 
-    private native void removeListenerNative(long clientAddress, long listener);
+    private native void removeListenerNative(long nativeChatClient, long listener);
 
-    private native void addContactNative(long m_nativeChatClient, String userName);
-    private native void removeContactNative(long m_nativeChatClient, int contactId);
+    private native void addContactNative(long nativeChatClient, String userName);
+    private native void removeContactNative(long nativeChatClient, int contactId);
 
-    private native void changeStateNative(long m_nativeChatClient,int state);
+    private native void changeStateNative(long nativeChatClient,int state);
 
-    private native void registerUserNative(long m_nativeChatClient, String userName, String password,
+    private native void registerUserNative(long nativeChatClient, String userName, String password,
                                            String firstName, String lastName);
 
-    private native void updateUserNative(long m_nativeChatClient, String userName, String password,
+    private native void updateUserNative(long nativeChatClient, String userName, String password,
                                          String firstName, String lastName);
 
 }

@@ -16,18 +16,17 @@ import dm.chatclient.R;
 import dm.chatclient.chatclient.listener.IRuntimeListener;
 import dm.chatclient.chatclient.notifier.IChatClientNotifier;
 import dm.chatclient.controller.IChatClientController;
-import dm.chatclient.model.BaseUser;
 import dm.chatclient.model.Contact;
 import dm.chatclient.model.Message;
 import dm.chatclient.utils.ContactListAdapter;
 import dm.chatclient.utils.ToastDisplayer;
 
-public class ContactListActivity extends AppCompatActivity implements IRuntimeListener
+public class ContactListView extends AppCompatActivity implements IRuntimeListener
 {
-    private IChatClientController m_controller;
-    private boolean m_close;
-    private boolean m_isVisible;
-    private ListView m_contactListView;
+    private IChatClientController controller;
+    private boolean close;
+    private boolean isVisible;
+    private ListView contactListView;
     ContactListAdapter contactListAdapter;
 
 
@@ -38,18 +37,18 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
 
-        m_contactListView = (ListView) findViewById(R.id.contactListView);
+        contactListView = (ListView) findViewById(R.id.contactListView);
         contactListAdapter = new ContactListAdapter(getApplicationContext());
-        m_contactListView.setAdapter(contactListAdapter);
-        m_contactListView.setOnItemClickListener(new ContactClickListener());
-        registerForContextMenu(m_contactListView);
+        contactListView.setAdapter(contactListAdapter);
+        contactListView.setOnItemClickListener(new ContactClickListener());
+        registerForContextMenu(contactListView);
 
-        m_controller = ((ChatClientApplication) getApplication()).getController();
-        m_controller.addRuntimeListener(this);
-        m_controller.requestContacts();
+        controller = ((ChatClientApplication) getApplication()).getController();
+        controller.addRuntimeListener(this);
+        controller.requestContacts();
 
-        m_isVisible =true;
-        m_close = false;
+        isVisible =true;
+        close = false;
 
         Button addButton = (Button) findViewById(R.id.addContactButton);
         addButton.setOnClickListener(new View.OnClickListener()
@@ -70,7 +69,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
             {
                 ChangeStateDialogFragment fragment = new ChangeStateDialogFragment();
                 Bundle args = new Bundle();
-                args.putInt("state", m_controller.getState().ordinal());
+                args.putInt("state", controller.getState().ordinal());
                 fragment.setArguments(args);
                 fragment.show(getSupportFragmentManager(),"Change state");
             }
@@ -84,31 +83,31 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     protected void onPause()
     {
         super.onPause();
-        m_isVisible = false;
+        isVisible = false;
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        m_isVisible = true;
-        m_close = false;
+        isVisible = true;
+        close = false;
         contactListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onBackPressed()
     {
-        if (m_close)
+        if (close)
         {
-            m_controller.removeRuntimeListener(this);
-            m_controller.disconnect();
+            controller.removeRuntimeListener(this);
+            controller.disconnect();
             super.onBackPressed();
         }
         else
         {
             ToastDisplayer.displayToast(getApplicationContext(), "Press again to exit");
-            m_close = true;
+            close = true;
         }
     }
 
@@ -127,7 +126,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
         if (item.getTitle() == "Delete")
         {
             Log.d("Delete", contact.getUserName());
-            m_controller.removeContact(contact, true);
+            controller.removeContact(contact, true);
             ToastDisplayer.displayToast(getApplicationContext(), contact.getUserName() + " has been removed from contacts");
             contactListAdapter.remove(contact);
             contactListAdapter.notifyDataSetChanged();
@@ -154,7 +153,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
         {
             public void run()
             {
-                if (m_isVisible)
+                if (isVisible)
                 {
                     ToastDisplayer.displayToast(getApplicationContext(), contact.getUserName() + " removed you from his contacts");
                 }
@@ -167,7 +166,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     @Override
     public void onAddContactResponse(final String userName, final IChatClientNotifier.ADD_REQUEST_STATUS status)
     {
-        if (m_isVisible)
+        if (isVisible)
         {
             this.runOnUiThread(new Runnable()
             {
@@ -180,15 +179,15 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     }
 
     @Override
-    public boolean onAddingByContact(String requester)
+    public boolean onAddRequest(String requester)
     {
-        if (m_isVisible)
+        if (isVisible)
         {
             final AddContactRequestDialogFragment requestFragment = new AddContactRequestDialogFragment();
             Bundle args = new Bundle();
             args.putString("userName", requester);
             requestFragment.setArguments(args);
-            Log.d("onAddingByContact", requester);
+            Log.d("onAddRequest", requester);
 
             this.runOnUiThread(new Runnable()
             {
@@ -219,7 +218,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     @Override
     public void onDisconnected()
     {
-       m_controller.removeRuntimeListener(this);
+       controller.removeRuntimeListener(this);
        finish();
     }
 
@@ -232,7 +231,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
        {
            public void run()
            {
-               contactListAdapter.setContactList(m_controller.getContacts());
+               contactListAdapter.setContactList(controller.getContacts());
                contactListAdapter.notifyDataSetChanged();
            }
        });
@@ -253,7 +252,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
     public void addContact(String userName)
     {
         Log.d("addContact",userName);
-        m_controller.addContact(userName);
+        controller.addContact(userName);
     }
 
 
@@ -263,7 +262,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
        @Override
        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
        {
-           Intent intent = new Intent(ContactListActivity.this, ConversationActivity.class);
+           Intent intent = new Intent(ContactListView.this, ConversationView.class);
 
            Contact c = (Contact) adapterView.getItemAtPosition(i);
 
@@ -277,7 +276,7 @@ public class ContactListActivity extends AppCompatActivity implements IRuntimeLi
         @Override
         public void onClick(View view)
         {
-            Intent intent = new Intent(ContactListActivity.this, UpdateActivity.class);
+            Intent intent = new Intent(ContactListView.this, UpdateView.class);
             startActivity(intent);
         }
     }

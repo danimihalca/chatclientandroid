@@ -1,5 +1,6 @@
 package dm.chatclient.controller;
 
+import android.util.Log;
 import dm.chatclient.chatclient.ChatClientJNIProxy;
 import dm.chatclient.chatclient.IChatClient;
 import dm.chatclient.chatclient.listener.*;
@@ -18,81 +19,69 @@ import java.util.*;
 
 public class ChatClientController implements IChatClientController
 {
-    private IContactRepository m_contactRepository;
-    private IMessageRepository m_messageRepository;
-    private IChatClient m_chatClient;
-    private IChatClientNotifier m_notifier;
-    private User m_user;
-    private boolean m_isconnected;
+    private IContactRepository contactRepository;
+    private IMessageRepository messageRepository;
+    private IChatClient chatClient;
+    private IChatClientNotifier notifier;
+    private User user;
 
     public BaseUser.USER_STATE getState()
     {
-        return m_state;
+        return state;
     }
 
     public void changeState(BaseUser.USER_STATE state)
     {
-        m_state = state;
-        m_chatClient.changeState(m_state);
+        this.state = state;
+        chatClient.changeState(state);
     }
 
     @Override
     public void registerUser(User user)
     {
-        m_chatClient.registerUser(user);
+        chatClient.registerUser(user);
     }
 
     @Override
     public void updateUser(User user)
     {
-        m_chatClient.updateUser(user);
-    }
-
-    @Override
-    public boolean isConnected()
-    {
-        return m_isconnected;
+        chatClient.updateUser(user);
     }
 
 
-    @Override
-    public void setConnected(boolean connected)
-    {
-        m_isconnected = connected;
-    }
-
-    private BaseUser.USER_STATE m_state;
+    private BaseUser.USER_STATE state;
 
     public ChatClientController()
     {
-        m_contactRepository = new InMemoryContactRepository();
-        m_messageRepository = new InMemoryMessageRepository();
-        m_chatClient = new ChatClientJNIProxy();
-        m_notifier = new JNIChatClientNotifier(this);
-        m_chatClient.addListener(m_notifier);
-        m_isconnected =false;
-        m_user = new User();
+        contactRepository = new InMemoryContactRepository();
+        messageRepository = new InMemoryMessageRepository();
+        chatClient = new ChatClientJNIProxy();
+        notifier = new JNIChatClientNotifier(this);
+        chatClient.addListener(notifier);
+        user = new User();
 
     }
 
     public User getUser()
     {
-        return m_user;
+        return user;
     }
 
     @Override
     public void setUser(User user)
     {
-        m_user.setUserName(user.getUserName());
-        m_user.setFirstName(user.getFirstName());
-        m_user.setLastName(user.getLastName());
-        m_user.setPassword(user.getPassword());
+        Log.d("ctr","setuser"+ user);
+        this.user.setUserName(user.getUserName());
+        this.user.setFirstName(user.getFirstName());
+        this.user.setLastName(user.getLastName());
+        this.user.setPassword(user.getPassword());
+        Log.d("ctr", "setuser" + user);
     }
 
     @Override
     public void addContact(String userName)
     {
-        m_chatClient.addContact(userName);
+        chatClient.addContact(userName);
     }
 
     @Override
@@ -100,129 +89,124 @@ public class ChatClientController implements IChatClientController
     {
         if (notifyServer)
         {
-            m_chatClient.removeContact(contact.getId());
+            chatClient.removeContact(contact.getId());
         }
-        m_contactRepository.deleteContact(contact);
-        m_messageRepository.removeMessages(contact);
+        contactRepository.deleteContact(contact);
+        messageRepository.removeMessages(contact);
     }
 
     public void connect(String address, int port)
     {
-        m_chatClient.connect(address, port);
+        chatClient.setServer(address, port);
     }
 
     public void login(String username, String password, BaseUser.USER_STATE state)
     {
-        m_chatClient.login(username, password, state);
-        m_state = state;
+        chatClient.login(username, password, state);
+        this.state = state;
     }
 
     public void disconnect()
     {
-        m_chatClient.disconnect();
+        chatClient.disconnect();
     }
 
     public void sendMessage(Message message)
     {
-        m_messageRepository.addMessage(message);
+        messageRepository.addMessage(message);
 
-        m_chatClient.sendMessage(message);
+        chatClient.sendMessage(message);
     }
 
 
     public List<Contact> getContacts()
     {
-        return m_contactRepository.getContacts();
+        return contactRepository.getContacts();
     }
 
     public void requestContacts()
     {
-        m_chatClient.requestContacts();
+        chatClient.requestContacts();
     }
 
     public List<Message> getMessages(Contact contact)
     {
-        return m_messageRepository.getMessagesWithContact(contact);
+        return messageRepository.getMessagesWithContact(contact);
     }
 
 
     public void setContacts(List<Contact> contacts)
     {
-        m_contactRepository.setContacts(contacts);
+        contactRepository.setContacts(contacts);
     }
 
     public Contact getContact(int contactId)
     {
-        return m_contactRepository.getContact(contactId);
+        return contactRepository.getContact(contactId);
     }
 
     public void clearMessages()
     {
-        m_messageRepository.clearMessages();
+        messageRepository.clearMessages();
     }
 
     public void clearContacts()
     {
-        m_contactRepository.clearContacts();
-    }
-
-    public void setLoginListener(ILoginListener listener)
-    {
-        m_notifier.addLoginListener(listener);
+        contactRepository.clearContacts();
     }
 
 
     public void addReceivedMessage(Message message)
     {
-        m_messageRepository.addMessage(message);
+        messageRepository.addMessage(message);
     }
 
     @Override
     public void addRegisterListener(IRegisterListener listener)
     {
-        m_notifier.addRegisterListener(listener);
+        notifier.addRegisterListener(listener);
     }
 
     @Override
     public void removeRegisterListener(IRegisterListener listener)
     {
-        m_notifier.removeRegisterListener(listener);
+        notifier.removeRegisterListener(listener);
     }
 
     @Override
     public void addUpdateListener(IUpdateListener listener)
     {
-        m_notifier.addUpdateListener(listener);
+        notifier.addUpdateListener(listener);
     }
 
     @Override
     public void removeUpdateListener(IUpdateListener listener)
     {
-        m_notifier.removeUpdateListener(listener);
+        notifier.removeUpdateListener(listener);
     }
 
     @Override
     public void addRuntimeListener(IRuntimeListener listener)
     {
-        m_notifier.addRuntimeListener(listener);
+        notifier.addRuntimeListener(listener);
     }
 
     @Override
     public void removeRuntimeListener(IRuntimeListener listener)
     {
-        m_notifier.removeRuntimeListener(listener);
+        notifier.removeRuntimeListener(listener);
     }
 
     @Override
     public void addLoginListener(ILoginListener listener)
     {
-        m_notifier.addLoginListener(listener);
+        notifier.addLoginListener(listener);
     }
 
     @Override
     public void removeLoginListener(ILoginListener listener)
     {
-        m_notifier.removeLoginListener(listener);
+        notifier.removeLoginListener(listener);
     }
 
 }

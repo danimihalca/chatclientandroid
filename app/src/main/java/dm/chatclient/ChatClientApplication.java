@@ -6,16 +6,16 @@ import dm.chatclient.controller.IChatClientController;
 
 public class ChatClientApplication extends Application
 {
-    IChatClientController m_chatClientController;
+    IChatClientController chatClientController;
 
     @Override
     public void onCreate()
     {
-        m_chatClientController = new ChatClientController();
+        chatClientController = new ChatClientController();
     }
 
     public IChatClientController getController()
     {
-        return m_chatClientController;
+        return chatClientController;
     }
 }

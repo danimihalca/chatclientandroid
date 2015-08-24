@@ -12,19 +12,19 @@ import java.util.Map;
  */
 public class InMemoryContactRepository implements IContactRepository
 {
-    Map<Integer, Contact> m_contacts;
+    Map<Integer, Contact> contacts;
 
     public InMemoryContactRepository()
     {
-        m_contacts = new HashMap<Integer, Contact>();
+        contacts = new HashMap<Integer, Contact>();
     }
 
     public void addContact(Contact c)
     {
-        Contact existingContact = m_contacts.get(c.getId());
+        Contact existingContact = contacts.get(c.getId());
         if (existingContact == null)
         {
-            m_contacts.put(c.getId(), c);
+            contacts.put(c.getId(), c);
         }
         else
         {
@@ -44,24 +44,24 @@ public class InMemoryContactRepository implements IContactRepository
 
     public List<Contact> getContacts()
     {
-        return new ArrayList<Contact>(m_contacts.values());
+        return new ArrayList<Contact>(contacts.values());
     }
 
     public Contact getContact(int contactId)
     {
-        return m_contacts.get(contactId);
+        return contacts.get(contactId);
     }
 
     @Override
     public void deleteContact(Contact contact)
     {
-        m_contacts.remove(contact.getId());
+        contacts.remove(contact.getId());
     }
 
 
     public void clearContacts()
     {
-        m_contacts.clear();
+        contacts.clear();
     }
 
     public void setContacts(List<Contact> contacts)

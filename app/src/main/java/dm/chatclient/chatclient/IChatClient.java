@@ -11,7 +11,7 @@ import dm.chatclient.model.User;
  */
 public interface IChatClient
 {
-    void connect(String address, int port);
+    void setServer(String address, int port);
 
     void login(String userName, String password, BaseUser.USER_STATE state);
 
@@ -20,9 +20,9 @@ public interface IChatClient
 
     void sendMessage(Message message);
 
-    void addListener(IChatClientNotifier m_notifier);
+    void addListener(IChatClientNotifier notifier);
 
-    void removeListener(IChatClientNotifier m_notifier);
+    void removeListener(IChatClientNotifier notifier);
     void addContact(String userName);
     void removeContact(int contactId);
 

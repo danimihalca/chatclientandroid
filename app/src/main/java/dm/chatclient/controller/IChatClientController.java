@@ -42,8 +42,6 @@ public interface IChatClientController
     void clearMessages();
     void clearContacts();
 
-    void setConnected(boolean connected);
-
     User getUser();
     void setUser(User user);
 
@@ -55,8 +53,6 @@ public interface IChatClientController
 
     void registerUser(User user);
     void updateUser(User user);
-
-    boolean isConnected();
 
     void addLoginListener(ILoginListener listener);
 

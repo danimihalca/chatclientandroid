@@ -5,51 +5,51 @@ import java.util.Date;
 
 public class Message
 {
-    private BaseUser m_sender;
-    private BaseUser m_receiver;
-    private String m_messageText;
-    private Date m_date;
+    private BaseUser sender;
+    private BaseUser receiver;
+    private String messageText;
+    private Date date;
 
     public Message(BaseUser sender, BaseUser receiver, String message)
     {
-        m_sender = sender;
-        m_receiver = receiver;
-        m_messageText = message;
-        m_date = Calendar.getInstance().getTime();
+        this.sender = sender;
+        this.receiver = receiver;
+        messageText = message;
+        date = Calendar.getInstance().getTime();
     }
 
     public String getMessageText()
     {
-        return m_messageText;
+        return messageText;
     }
 
-    public void setMessageText(String m_messageText)
+    public void setMessageText(String messageText)
     {
-        this.m_messageText = m_messageText;
+        this.messageText = messageText;
     }
 
     public BaseUser getSender()
     {
-        return m_sender;
+        return sender;
     }
 
     public void setSender(BaseUser sender)
     {
-        this.m_sender = sender;
+        this.sender = sender;
     }
 
     public BaseUser getReceiver()
     {
-        return m_receiver;
+        return receiver;
     }
 
     public void setReceiver(BaseUser receiver)
     {
-        m_receiver = receiver;
+        this.receiver = receiver;
     }
 
     public Date getDate()
     {
-        return  m_date;
+        return  date;
     }
 }

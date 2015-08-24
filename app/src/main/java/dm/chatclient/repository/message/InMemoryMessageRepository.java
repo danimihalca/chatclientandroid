@@ -13,11 +13,11 @@ import java.util.Map;
  */
 public class InMemoryMessageRepository implements IMessageRepository
 {
-    private Map<Contact, List<Message>> m_messages;
+    private Map<Contact, List<Message>> messages;
 
     public InMemoryMessageRepository()
     {
-        m_messages = new HashMap<Contact, List<Message>>();
+        messages = new HashMap<Contact, List<Message>>();
     }
 
     public void addMessage(Message message)
@@ -32,23 +32,23 @@ public class InMemoryMessageRepository implements IMessageRepository
             relatedContact = (Contact) message.getReceiver();
         }
 
-        if (!m_messages.containsKey(relatedContact))
+        if (!messages.containsKey(relatedContact))
         {
-            m_messages.put(relatedContact, new ArrayList<Message>());
+            messages.put(relatedContact, new ArrayList<Message>());
         }
-        m_messages.get(relatedContact).add(message);
+        messages.get(relatedContact).add(message);
     }
 
     public List<Message> getMessagesWithContact(Contact contact)
     {
-        if (m_messages.containsKey(contact))
+        if (messages.containsKey(contact))
         {
-            return  m_messages.get(contact);
+            return  messages.get(contact);
         }
         else
         {
             List<Message> newMessageList = new ArrayList<Message>();
-            m_messages.put(contact,newMessageList);
+            messages.put(contact,newMessageList);
             return  newMessageList;
         }
     }
@@ -56,12 +56,12 @@ public class InMemoryMessageRepository implements IMessageRepository
     @Override
     public void removeMessages(Contact contact)
     {
-        m_messages.remove(contact);
+        messages.remove(contact);
     }
 
 
     public void clearMessages()
     {
-        m_messages.clear();
+        messages.clear();
     }
 }

@@ -5,34 +5,34 @@ public class Contact extends BaseUser
 
 
 
-    private USER_STATE m_state;
-    private int m_unreadMessagesCount;
+    private USER_STATE state;
+    private int unreadMessagesCount;
 
     public Contact(int id, String userName, String firstName,String lastName, USER_STATE state)
     {
         super(id, userName, firstName,lastName);
-        this.m_state = state;
-        this.m_unreadMessagesCount = 0;
+        this.state = state;
+        this.unreadMessagesCount = 0;
     }
 
     public USER_STATE getState()
     {
-        return m_state;
+        return state;
     }
 
     public void setState(USER_STATE state)
     {
-        this.m_state = state;
+        this.state = state;
     }
 
     public int getUnreadMessagesCount()
     {
-        return m_unreadMessagesCount;
+        return unreadMessagesCount;
     }
 
-    public void setUnreadMessagesCount(int m_unreadMessagesCount)
+    public void setUnreadMessagesCount(int unreadMessagesCount)
     {
-        this.m_unreadMessagesCount = m_unreadMessagesCount;
+        this.unreadMessagesCount = unreadMessagesCount;
     }
 
 }

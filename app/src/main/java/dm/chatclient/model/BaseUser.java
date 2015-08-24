@@ -5,6 +5,17 @@ package dm.chatclient.model;
  */
 public abstract class BaseUser
 {
+    @Override
+    public String toString()
+    {
+        return "BaseUser{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
+
     public enum USER_STATE
     {
         OFFLINE,
@@ -32,61 +43,61 @@ public abstract class BaseUser
         }
     }
 
-    private int m_id;
-    private String m_userName;
-    private String m_firstName;
-    private String m_lastName;
+    private int id;
+    private String userName;
+    private String firstName;
+    private String lastName;
 
     public BaseUser()
     {
     }
 
-    public BaseUser(int id, String userName, String fullName, String lastName)
+    public BaseUser(int id, String userName, String firstName, String lastName)
     {
-        m_id = id;
-        m_userName = userName;
-        m_firstName = fullName;
-        m_lastName = lastName;
+        this.id = id;
+        this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public int getId()
     {
-        return m_id;
+        return id;
     }
 
     public void setId(int id)
     {
-        m_id = id;
+        this.id = id;
     }
 
     public String getUserName()
     {
-        return m_userName;
+        return userName;
     }
 
     public void setUserName(String userName)
     {
-        m_userName = userName;
+        this.userName = userName;
     }
 
     public String getFirstName()
     {
-        return m_firstName;
+        return firstName;
     }
 
     public void setFirstName(String fullName)
     {
-        m_firstName = fullName;
+        firstName = fullName;
     }
 
     public String getLastName()
     {
-        return m_lastName;
+        return lastName;
     }
 
     public void setLastName(String lastName)
     {
-        this.m_lastName = lastName;
+        this.lastName = lastName;
     }
 
     @Override
@@ -97,13 +108,13 @@ public abstract class BaseUser
 
         BaseUser baseUser = (BaseUser) o;
 
-        return m_id == baseUser.m_id;
+        return id == baseUser.id;
 
     }
 
     @Override
     public int hashCode()
     {
-        return m_id;
+        return id;
     }
 }

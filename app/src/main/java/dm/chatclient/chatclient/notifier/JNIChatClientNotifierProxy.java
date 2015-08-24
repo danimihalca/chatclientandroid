@@ -8,27 +8,27 @@ import java.io.IOException;
  */
 public class JNIChatClientNotifierProxy implements Closeable
 {
-    private enum CALLBACK_METHOD
+    public enum CALLBACK_METHOD
     {
-        ON_CONNECTED,
+//        ON_CONNECTED,
         ON_DISCONNECTED,
         ON_CONNECTION_ERROR,
         ON_LOGIN_SUCCESSFUL,
         ON_LOGIN_FAILED,
-        ON_CONTACT_STATUS_CHANGED,
+        ON_CONTACT_STATE_CHANGED,
         ON_MESSAGE_RECEIVED,
         ON_CONTACTS_RECEIVED,
 
         ON_REMOVED_BY_CONTACT,
         ON_ADD_CONTACT_RESPONSE,
-        ON_ADDING_BY_CONTACT,
+        ON_ADD_REQUEST,
 
         ON_REGISTER_UPDATE_RESPONSE
 
 
     }
 
-    private long m_nativeNotifierProxy;
+    private long nativeNotifierProxyPtr;
 
     static
     {
@@ -37,94 +37,95 @@ public class JNIChatClientNotifierProxy implements Closeable
 
     public JNIChatClientNotifierProxy(JNIChatClientNotifier actualNotifier)
     {
-        m_nativeNotifierProxy = createNativeNotifierProxy(actualNotifier);
+        nativeNotifierProxyPtr = createNativeNotifierProxy(actualNotifier);
     }
 
-    public void setOnConnectedCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_CONNECTED, methodName);
-    }
+//    public void setOnConnectedCallback(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_CONNECTED, methodName);
+//    }
 
-    public void setOnDisconnectedCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_DISCONNECTED, methodName);
-    }
-
-
-    public void setOnConnectionErrorCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_CONNECTION_ERROR, methodName);
-    }
-
-    public void setOnLoginSuccessfulCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_LOGIN_SUCCESSFUL, methodName);
-    }
-
-    public void setOnLoginFailedCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_LOGIN_FAILED, methodName);
-    }
-
-    public void setOnContactStatusChangedCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_CONTACT_STATUS_CHANGED, methodName);
-    }
-
-    public void setOnMessageReceivedCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_MESSAGE_RECEIVED, methodName);
-    }
-    public void setOnContactsReceivedCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_CONTACTS_RECEIVED, methodName);
-    }
-
-    public void setOnRemovedByContactCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_REMOVED_BY_CONTACT, methodName);
-    }
-
-    public void setOnAddContactResponseCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_ADD_CONTACT_RESPONSE, methodName);
-    }
-    public void setOnAddingByContactCallback(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_ADDING_BY_CONTACT, methodName);
-    }
-
-    public void setOnRegisterUpdateResponse(String methodName)
-    {
-        setCallbackMethod(CALLBACK_METHOD.ON_REGISTER_UPDATE_RESPONSE, methodName);
-    }
+//    public void setOnDisconnectedCallback(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_DISCONNECTED, methodName);
+//    }
+//
+//
+//    public void setOnConnectionErrorCallback(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_CONNECTION_ERROR, methodName);
+//    }
+//
+//    public void setOnLoginSuccessfulCallback(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_LOGIN_SUCCESSFUL, methodName);
+//    }
+//
+//    public void setOnLoginFailedCallback(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_LOGIN_FAILED, methodName);
+//    }
+//
+//    public void setOnContactStatusChangedCallback(String methodName)
+//    {
+//    }
+//
+//    public void setOnMessageReceivedCallback(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_MESSAGE_RECEIVED, methodName);
+//    }
+//    public void setOnContactsReceivedCallback(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_CONTACTS_RECEIVED, methodName);
+//    }
+//
+//    public void setOnRemovedByContactCallback(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_REMOVED_BY_CONTACT, methodName);
+//    }
+//
+//    public void setOnAddContactResponseCallback(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_ADD_CONTACT_RESPONSE, methodName);
+//    }
+//    public void setOnAddingByContactCallback(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_ADD_REQUEST, methodName);
+//    }
+//
+//    public void setOnRegisterUpdateResponse(String methodName)
+//    {
+//        setCallbackMethod(CALLBACK_METHOD.ON_REGISTER_UPDATE_RESPONSE, methodName);
+//    }
 
     @Override
     public void close() throws IOException
     {
-        destroyNativeNotifierProxy(m_nativeNotifierProxy);
-        m_nativeNotifierProxy = 0;
+        destroyNativeNotifierProxy(nativeNotifierProxyPtr);
+        nativeNotifierProxyPtr = 0;
     }
 
 
-    public long getNativeNotifierProxy()
+    public long getNativeNotifierProxyAddress()
     {
-        return m_nativeNotifierProxy;
+        return nativeNotifierProxyPtr;
+    }
+
+    public void setCallbackMethod(CALLBACK_METHOD callbackMethod, String methodName)
+    {
+        setCallbackMethodNative(nativeNotifierProxyPtr,callbackMethod.ordinal(), methodName);
     }
 
     @Override
     protected void finalize() throws Throwable
     {
-        if (m_nativeNotifierProxy != 0)
+        if (nativeNotifierProxyPtr != 0)
         {
             close();
         }
     }
 
-    private void setCallbackMethod(CALLBACK_METHOD callbackMethod, String methodName)
-    {
-        setCallbackMethodNative(m_nativeNotifierProxy,callbackMethod.ordinal(), methodName);
-    }
+
 
     private native long createNativeNotifierProxy(JNIChatClientNotifier actualNotifier);
 

@@ -5,44 +5,44 @@ package dm.chatclient.model;
  */
 public class UserDetails
 {
-    private int m_id;
-    private String m_firstName;
-    private String m_lastName;
+    private int id;
+    private String firstName;
+    private String lastName;
 
     public UserDetails(int id, String firstName, String lastName)
     {
-        m_id = id;
-        m_firstName = firstName;
-        m_lastName = lastName;
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
     public int getId()
     {
-        return m_id;
+        return id;
     }
 
     public void setId(int id)
     {
-        m_id = id;
+        this.id = id;
     }
 
     public String getFirstName()
     {
-        return m_firstName;
+        return firstName;
     }
 
-    public void setFirstName(String fullName)
+    public void setFirstName(String firstName)
     {
-        m_firstName = fullName;
+        this.firstName = firstName;
     }
 
     public String getLastName()
     {
-        return m_lastName;
+        return lastName;
     }
 
     public void setLastName(String lastName)
     {
-        this.m_lastName = lastName;
+        this.lastName = lastName;
     }
 
 }
