@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * Created by Ice on 8/9/2015.
  */
-public class JNIChatClientNotifierProxy implements Closeable
+public class JNIChatClientNotifierProxyWrapper implements Closeable
 {
     public enum CALLBACK_METHOD
     {
@@ -35,7 +35,7 @@ public class JNIChatClientNotifierProxy implements Closeable
         System.loadLibrary("chatClientJNI");
     }
 
-    public JNIChatClientNotifierProxy(JNIChatClientNotifier actualNotifier)
+    public JNIChatClientNotifierProxyWrapper(JNIChatClientNotifier actualNotifier)
     {
         nativeNotifierProxyPtr = createNativeNotifierProxy(actualNotifier);
     }

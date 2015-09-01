@@ -25,9 +25,8 @@ public class ContactListAdapter extends ArrayAdapter<Contact>
         super(context, 0, new ArrayList<Contact>());
 
         onlineDrawable = getContext().getResources().getDrawable(R.drawable.online);
-        busyDrawable = getContext().getResources().getDrawable(R.drawable.offline);
-// TODO:///sdagfagas
-//     idleDrawable =
+        busyDrawable = getContext().getResources().getDrawable(R.drawable.busy);
+        idleDrawable = getContext().getResources().getDrawable(R.drawable.idle2);
     }
 
     public ContactListAdapter(Context context, List<Contact> contacts)
@@ -90,7 +89,7 @@ public class ContactListAdapter extends ArrayAdapter<Contact>
             }
             case IDLE:
             {
-                onlineImageView.setImageDrawable(idleDrawable);
+                onlineImageView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.idle2));
             }
             case OFFLINE:
             {

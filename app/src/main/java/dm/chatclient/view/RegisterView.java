@@ -58,7 +58,7 @@ public class RegisterView extends AppCompatActivity implements IRegisterListener
         {
             public void run()
             {
-                ToastDisplayer.displayToast(getApplicationContext(), "STATUS : " + status.toString());
+                ToastDisplayer.displayToast(getApplicationContext(), status.toString());
                 if (status == IChatClientNotifier.REGISTER_UPDATE_STATUS.USER_OK)
                 {
                     controller.removeRegisterListener(RegisterView.this);

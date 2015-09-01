@@ -47,6 +47,7 @@ public class ChatClientJNIProxy implements IChatClient, Closeable
 
     public void sendMessage(Message message)
     {
+        if (nativeChatClientPtr != 0)
         sendMessageNative(nativeChatClientPtr, message.getReceiver().getId(), message.getMessageText());
     }
 

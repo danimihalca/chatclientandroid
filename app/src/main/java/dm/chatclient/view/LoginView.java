@@ -108,7 +108,7 @@ public class LoginView extends AppCompatActivity implements ILoginListener
             public void run()
             {
                 loginButton.setEnabled(true);
-                ToastDisplayer.displayToast(getApplicationContext(), "Login failed: " + reason.toString());
+                ToastDisplayer.displayToast(getApplicationContext(), reason.toString());
             }
         });
     }

@@ -160,7 +160,14 @@ public class ConversationView extends AppCompatActivity implements IRuntimeListe
             {
                 public void run()
                 {
-                    ToastDisplayer.displayToast(getApplicationContext(), userName + ":"+status.toString());
+                if (status == IChatClientNotifier.ADD_REQUEST_STATUS.ADD_YOURSELF)
+                {
+                    ToastDisplayer.displayToast(getApplicationContext(), status.toString());
+                }
+                else
+                {
+                    ToastDisplayer.displayToast(getApplicationContext(), userName + " "+status.toString());
+                }
                 }
             });
         }

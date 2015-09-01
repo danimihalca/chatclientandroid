@@ -17,7 +17,7 @@ import java.util.List;
 public class JNIChatClientNotifier extends ChatClientNotifier implements Closeable
 {
     private long nativeListenerPtr;
-    private JNIChatClientNotifierProxy notifierProxy;
+    private JNIChatClientNotifierProxyWrapper notifierProxy;
 
     static
     {
@@ -28,7 +28,7 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
     {
         super(controller);
 
-        notifierProxy= new JNIChatClientNotifierProxy(this);
+        notifierProxy= new JNIChatClientNotifierProxyWrapper(this);
         initializeNotifierProxy();
 
         nativeListenerPtr = createNativeJNIListener(notifierProxy.getNativeNotifierProxyAddress());
@@ -53,30 +53,30 @@ public class JNIChatClientNotifier extends ChatClientNotifier implements Closeab
     {
 
 //        notifierProxy.setOnConnectedCallback("notifyOnConnected");
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_DISCONNECTED,
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_DISCONNECTED,
                 "notifyOnDisconnected");
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_CONNECTION_ERROR,
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_CONNECTION_ERROR,
                 "notifyOnConnectionError");
 
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_LOGIN_FAILED,
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_LOGIN_FAILED,
                 "notifyOnLoginFailedFromJNI");
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_LOGIN_SUCCESSFUL,
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_LOGIN_SUCCESSFUL,
                 "notifyOnLoginSuccessfulFromJNI");
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_MESSAGE_RECEIVED,
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_MESSAGE_RECEIVED,
                 "notifyOnMessageReceivedFromJNI");
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_CONTACTS_RECEIVED,
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_CONTACTS_RECEIVED,
                 "notifyOnContactsReceivedFromJNI");
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_CONTACT_STATE_CHANGED
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_CONTACT_STATE_CHANGED
                 ,"notifyOnContactOnlineStatusChangedFromJNI");
 
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_REMOVED_BY_CONTACT,
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_REMOVED_BY_CONTACT,
                 "notifyOnRemovedByContact");
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_ADD_CONTACT_RESPONSE,
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_ADD_CONTACT_RESPONSE,
                 "notifyOnAddContactResponseFromJNI");
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_ADD_REQUEST,
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_ADD_REQUEST,
                 "notifyOnAddRequest");
 
-        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxy.CALLBACK_METHOD.ON_REGISTER_UPDATE_RESPONSE,
+        notifierProxy.setCallbackMethod(JNIChatClientNotifierProxyWrapper.CALLBACK_METHOD.ON_REGISTER_UPDATE_RESPONSE,
                 "notifyOnRegisterUpdateResponseFromJNI");
     }
 

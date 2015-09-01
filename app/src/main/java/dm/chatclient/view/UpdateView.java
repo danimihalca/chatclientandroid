@@ -126,7 +126,7 @@ public class UpdateView extends AppCompatActivity implements IUpdateListener
             {
                 public void run()
                 {
-                    ToastDisplayer.displayToast(getApplicationContext(), contact.getUserName() + " removed you from his contacts");
+                    ToastDisplayer.displayToast(getApplicationContext(), contact.getUserName() + " removed you");
                 }
             });
         }
@@ -180,7 +180,7 @@ public class UpdateView extends AppCompatActivity implements IUpdateListener
         {
             public void run()
             {
-                ToastDisplayer.displayToast(getApplicationContext(), "STATUS : " + status.toString());
+                ToastDisplayer.displayToast(getApplicationContext(), status.toString());
                 if (status == IChatClientNotifier.REGISTER_UPDATE_STATUS.USER_OK)
                 {
                     controller.setUser(user);

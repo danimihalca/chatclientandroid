@@ -34,6 +34,23 @@ public interface IChatClientNotifier
             }
             return  AUTH_INVALID_CREDENTIALS;
         }
+
+        @Override
+        public String toString()
+        {
+            switch (this)
+            {
+                case AUTH_SUCCESSFUL:
+                    return "Login successful!";
+                case AUTH_ALREADY_LOGGED_IN:
+                    return "User already logged in!";
+                case AUTH_INVALID_CREDENTIALS:
+                    return "Invalid credentials!";
+                case AUTH_INVALID_STATE:
+                    return "Invalid state!";
+            }
+            return  "";
+        }
     }
     enum ADD_REQUEST_STATUS
     {
@@ -57,6 +74,25 @@ public interface IChatClientNotifier
             }
             return  ADD_YOURSELF;
         }
+
+        @Override
+        public String toString()
+        {
+            switch (this)
+            {
+                case ADD_ACCEPTED:
+                    return "has accepted";
+                case ADD_DECLINED:
+                    return "has declined";
+                case ADD_OFFLINE:
+                    return "is offline";
+                case ADD_INEXISTENT:
+                    return "doesn't exist";
+                case ADD_YOURSELF:
+                    return "Cannot add yourself!";
+            }
+            return "";
+        }
     };
 
 
@@ -79,6 +115,20 @@ public interface IChatClientNotifier
             return  USER_INVALID_INPUT;
         }
 
+        @Override
+        public String toString()
+        {
+            switch (this)
+            {
+                case USER_OK:
+                    return "Successful!";
+                case USER_EXISTING_USERNAME:
+                    return "Username already exists!";
+                case USER_INVALID_INPUT:
+                    return "Missing fields!";
+            }
+            return "";
+        }
     };
 
     void addRegisterListener(IRegisterListener listener);

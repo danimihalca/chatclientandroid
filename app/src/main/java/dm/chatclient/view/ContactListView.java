@@ -172,7 +172,14 @@ public class ContactListView extends AppCompatActivity implements IRuntimeListen
             {
                 public void run()
                 {
-                    ToastDisplayer.displayToast(getApplicationContext(), userName + ":"+status.toString());
+                    if (status == IChatClientNotifier.ADD_REQUEST_STATUS.ADD_YOURSELF)
+                    {
+                        ToastDisplayer.displayToast(getApplicationContext(), status.toString());
+                    }
+                    else
+                    {
+                        ToastDisplayer.displayToast(getApplicationContext(), userName + " "+status.toString());
+                    }
                 }
             });
         }

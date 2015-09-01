@@ -20,8 +20,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/userNameView"
-            android:layout_below="@+id/firstNameView" android:layout_alignRight="@+id/firstNameView"
-            android:layout_alignEnd="@+id/firstNameView" android:layout_margin="5dp"/>
+            android:layout_below="@+id/firstNameView"
+            android:layout_alignLeft="@+id/firstNameView" android:layout_alignStart="@+id/firstNameView"/>
     <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"

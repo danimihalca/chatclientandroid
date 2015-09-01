@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MessageListAdapter extends ArrayAdapter<Message>
 {
-    public static SimpleDateFormat detailDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    public static SimpleDateFormat detailDateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public MessageListAdapter(Context context)
     {
