@@ -80,12 +80,6 @@ public class RegisterView extends AppCompatActivity implements IRegisterListener
         });
     }
 
-//    @Override
-//    public void onConnected()
-//    {
-//        controller.setConnected(true);
-//        controller.registerUser(user);
-//    }
 
     @Override
     public void onConnectionError()
@@ -108,14 +102,8 @@ public class RegisterView extends AppCompatActivity implements IRegisterListener
             user.setPassword(password.getText().toString());
             user.setFirstName(firstname.getText().toString());
             user.setLastName(lastname.getText().toString());
-//            if (controller.isConnected())
-//            {
-            controller.connect("192.168.0.3",9003);
-                controller.registerUser(user);
-//            }
-//            else
-//            {
-//            }
+
+            controller.registerUser(user);
         }
     }
 

@@ -38,8 +38,12 @@
             android:label="@string/title_activity_register_update" >
         </activity>
         <activity
-                android:name=".view.UpdateView"
-                android:label="@string/title_activity_register_update" >
+            android:name=".view.UpdateView"
+            android:label="@string/title_activity_register_update" >
+        </activity>
+        <activity
+            android:name=".view.SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

@@ -23,7 +23,7 @@ public interface IChatClientController
 
     void requestContacts();
 
-    void connect(String address, int port);
+    void setServer(String address, int port);
     void login(String userName, String password,BaseUser.USER_STATE state);
 
     void disconnect();

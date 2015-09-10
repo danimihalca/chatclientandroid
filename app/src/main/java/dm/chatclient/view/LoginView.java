@@ -45,6 +45,8 @@ public class LoginView extends AppCompatActivity implements ILoginListener
 
         controller = ((ChatClientApplication) getApplication()).getController();
         controller.addLoginListener(LoginView.this);
+        controller.setServer(((ChatClientApplication) getApplication()).serverAddress,
+                ((ChatClientApplication) getApplication()).serverPort);
 
         loginButton =(Button) findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new LoginButtonListener());
@@ -133,7 +135,6 @@ public class LoginView extends AppCompatActivity implements ILoginListener
          public void onClick(View view)
          {
              loginButton.setEnabled(false);
-             controller.connect("192.168.0.3",9003);
              doLogin();
          }
      }
@@ -154,7 +155,7 @@ public class LoginView extends AppCompatActivity implements ILoginListener
          @Override
          public void onClick(View view)
          {
-             Intent intent = new Intent(LoginView.this, AdvancedSettingsActivity.class);
+             Intent intent = new Intent(LoginView.this, SettingsActivity.class);
              startActivity(intent);
          }
      }

@@ -95,7 +95,7 @@ public class ChatClientController implements IChatClientController
         messageRepository.removeMessages(contact);
     }
 
-    public void connect(String address, int port)
+    public void setServer(String address, int port)
     {
         chatClient.setServer(address, port);
     }
